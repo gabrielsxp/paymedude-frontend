@@ -15,6 +15,7 @@ class PublicProfile extends React.Component {
         profileOwner: null,
         ok: null,
         offset: 0,
+        category: 'Public',
         error: null
     }
     componentDidMount() {
@@ -76,6 +77,9 @@ class PublicProfile extends React.Component {
                 this.setState({ error });
             })
     }
+    changeCategory = (value) => {
+        this.setState({ offset: 0, category: value});
+    }
     render() {
         return <div style={{ minHeight: '100vh', paddingTop: '0px', paddingBottom: '80px' }}>
             {
@@ -84,7 +88,7 @@ class PublicProfile extends React.Component {
                 </Spinner></Row></Container>
             }
             {
-                !this.state.loading && this.props.user && this.props.posts ? <Posts profileLink={false} posts={this.props.posts} user={this.props.user} limit={this.state.limit} getPosts={this.getPosts} likePost={this.likePost} unlikePost={this.unlikePost} /> : <Container><Row><Spinner style={{ margin: '50px auto' }} animation="border" role="status">
+                !this.state.loading && this.props.user && this.props.posts ? <Posts category={this.state.category} changeCategory={this.changeCategory} profileLink={false} posts={this.props.posts} user={this.props.user} limit={this.state.limit} getPosts={this.getPosts} likePost={this.likePost} unlikePost={this.unlikePost} /> : <Container><Row><Spinner style={{ margin: '50px auto' }} animation="border" role="status">
                     <span className="sr-only">Loading...</span>
                 </Spinner></Row></Container>
             }

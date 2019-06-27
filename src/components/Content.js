@@ -10,9 +10,11 @@ class Content extends React.Component {
     state = {
         loading: null,
         offset: 0,
-        category: 'Public'
+        category: 'Public',
+        paymentDialogLoad: false
     }
     componentDidMount(){
+        console.log(this.props.user);
         this.getPosts(true);
     }
     getPosts = (init = false, resetOffset = false) => {
@@ -55,14 +57,19 @@ class Content extends React.Component {
                 }
             })
             .catch((error) => {
-                this.setState({ error });
+                console.log(error);
             })
     }
     changeCategory = (value) => {
         this.setState({ offset: 0, category: value});
     }
+    handlePaymentDialogShow = (value, id) => {
+        this.props.checkOutValue(value);
+        this.props.setPostId(id);
+        this.props.dispatchDisplayCheckoutModal(true);
+    }
     render() {
-        return !this.state.loading && this.props.posts ? <Posts category={this.state.category} changeCategory={this.changeCategory} profileLink={true} posts={this.props.posts} user={this.props.user} limit={this.state.limit} getPosts={this.getPosts} likePost={this.likePost} unlikePost={this.unlikePost} /> : <Container fluid><Row><Spinner style={{ margin: '50px auto' }} animation="border" role="status">
+        return !this.state.loading && this.props.posts && this.props.user ? <Posts paymentDialogLoad={this.props.displayCheckoutModal} handlePaymentDialogShow={this.handlePaymentDialogShow} category={this.state.category} changeCategory={this.changeCategory} profileLink={true} posts={this.props.posts} user={this.props.user} limit={this.state.limit} getPosts={this.getPosts} likePost={this.likePost} unlikePost={this.unlikePost} /> : <Container fluid><Row><Spinner style={{ margin: '50px auto' }} animation="border" role="status">
             <span className="sr-only">Loading...</span>
         </Spinner></Row></Container>
     }
@@ -73,7 +80,8 @@ const mapStateToProps = state => {
         auth: state.authenticated,
         user: state.user,
         posts: state.posts,
-        profileOwner: state.profileOwner
+        profileOwner: state.profileOwner,
+        displayCheckoutModal: state.displayCheckoutModal
     }
 }
 
@@ -81,6 +89,9 @@ const mapDispatchToProps = dispatch => {
     return {
         loadPosts: (posts) => dispatch({ type: 'POSTS_LOAD', posts }),
         initPosts: (posts) => dispatch({ type: 'POSTS_INIT', posts }),
+        setPostId: (id) => dispatch({type: 'SET_POST_ID', id}),
+        dispatchDisplayCheckoutModal: (display) => dispatch( {type: 'DISPLAY_CHECKOUT_MODAL', display }),
+        checkOutValue: (value) => dispatch({type: 'SET_CHECKOUT_VALUE', checkoutValue: value }),
         incrementLikePost: (post, index, user) => dispatch({ type: 'POST_INCREMENT_LIKE', post, index, user }),
         decrementLikePost: (post, index, user) => dispatch({ type: 'POST_DECREMENT_LIKE', post, index, user }),
     }

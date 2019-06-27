@@ -6,6 +6,9 @@ const initialState = {
     profileOwner: null,
     userChanged: false,
     posts: [],
+    displayCheckoutModal: false,
+    checkoutValue: 0,
+    checkoutPostId: null,
     likedPosts: []
 }
 
@@ -25,6 +28,7 @@ const reducer = (state = initialState, action) => {
                 auth: false
             }
         case 'SAVE_USER':
+            console.log(action.user);
             return {
                 ...state,
                 user: action.user
@@ -90,6 +94,22 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 userChanged: action.userChanged,
                 user: action.user
+            }
+        case 'SET_CHECKOUT_VALUE':
+            return {
+                ...state,
+                checkoutValue: action.checkoutValue
+            }
+        case 'DISPLAY_CHECKOUT_MODAL':
+            console.log(state.displayCheckoutModal, action.display);
+            return {
+                ...state,
+                displayCheckoutModal: action.display
+            }
+        case 'SET_POST_ID':
+            return {
+                ...state,
+                checkoutPostId: action.id
             }
         default:
             break;

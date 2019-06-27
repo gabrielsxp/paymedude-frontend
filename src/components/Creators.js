@@ -5,7 +5,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Spinner from 'react-bootstrap/Spinner';
@@ -119,7 +118,7 @@ class Creators extends React.Component {
                 </div>
                 <Row>
                     {
-                        !this.state.loading && this.state.creators ? this.state.creators.map((creator, index) => {
+                        this.state.creators ? this.state.creators.map((creator, index) => {
                             return <Col key={index} xs={12} md={6} lg={4} style={{ marginTop: '50px' }}>
                                 <Card style={{ width: '18rem' }}>
                                     <Card.Img variant="top" src={`http://127.0.0.1:3001/assets/${creator.fullImage}`} />

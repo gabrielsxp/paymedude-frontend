@@ -892,6 +892,38 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@braintree/asset-loader@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@braintree/asset-loader/-/asset-loader-0.2.1.tgz#1f744aada54321ff591e846d707a7b7d58d7ca9f"
+  integrity sha512-KNzByHqcZKHm6lss1dGCbLs9K4XrmLqn5YNdL0e7g7A0dzUU4mhXmZF+7rLAqX+XP9gE6nSaf7xh+TBj7oo24w==
+  dependencies:
+    promise-polyfill "^8.1.0"
+
+"@braintree/browser-detection@1.7.0", "@braintree/browser-detection@^1.5.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@braintree/browser-detection/-/browser-detection-1.7.0.tgz#895ba64b700c3f36cab5c54591caf71a41171dd8"
+  integrity sha1-iVumS3AMPzbKtcVFkcr3GkEXHdg=
+
+"@braintree/class-list@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@braintree/class-list/-/class-list-0.1.0.tgz#d6c8606ce6a82b4b37f28e32eadd090abcf1adaa"
+  integrity sha512-AmXPsYhiNJKcxuwkgQjwyyTwFCeRlyFTeUJ9ecV/jLxS8ZH8fCAB4enYgArMRyvCekZZkqLK54kOJ6+OJBzJwA==
+
+"@braintree/iframer@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@braintree/iframer/-/iframer-1.0.3.tgz#21dd1fd4cebd4154aeab1efa4d5b0d5f4384364e"
+  integrity sha1-Id0f1M69QVSuqx76TVsNX0OENk4=
+
+"@braintree/sanitize-url@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@braintree/sanitize-url/-/sanitize-url-3.1.0.tgz#8ff71d51053cd5ee4981e5a501d80a536244f7fd"
+  integrity sha512-GcIY79elgB+azP74j8vqkiXz8xLFfIzbQJdlwOPisgbKT00tviJQuEghOXSMVxJ00HoYJbGswr4kcllUc4xCcg==
+
+"@braintree/wrap-promise@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@braintree/wrap-promise/-/wrap-promise-1.1.1.tgz#d22c76855e6d4b4012610060421fae1a37ec90b0"
+  integrity sha1-0ix2hV5tS0ASYQBgQh+uGjfskLA=
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.3.tgz#099139eaec7ebf07a27c1786a3ff64f39464d2ef"
@@ -2173,6 +2205,44 @@ braces@^2.3.1, braces@^2.3.2:
     split-string "^3.0.2"
     to-regex "^3.0.1"
 
+braintree-web-drop-in-react@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/braintree-web-drop-in-react/-/braintree-web-drop-in-react-1.0.8.tgz#643be1ed1a69cd102ff751c2d7b7794bf3bd87ed"
+  integrity sha512-3jUHbJrl37E14r9MPpWPp3SlK0lpLtTSsZu7mvf63pSCh9oaVpNahX7MNSt2xWbKlEcKY6MPaEnuuEDBbY28Aw==
+  dependencies:
+    braintree-web-drop-in "^1.17.1"
+    prop-types "^15.7.0"
+
+braintree-web-drop-in@^1.17.1:
+  version "1.18.0"
+  resolved "https://registry.yarnpkg.com/braintree-web-drop-in/-/braintree-web-drop-in-1.18.0.tgz#13e0c4c89fed685c2a73d7f66b230aabb95e10f9"
+  integrity sha512-AlQD6VepIb2VahUmXd1EStIACVAOZ6UApsrU9VlhWcNJnCmPkgGQ4OivYXNkzbri3lp/bViBqjKtRXKqfTpDNw==
+  dependencies:
+    "@braintree/asset-loader" "0.2.1"
+    "@braintree/browser-detection" "1.7.0"
+    "@braintree/class-list" "0.1.0"
+    "@braintree/wrap-promise" "1.1.1"
+    braintree-web "3.44.2"
+    promise-polyfill "8.1.0"
+
+braintree-web@3.44.2:
+  version "3.44.2"
+  resolved "https://registry.yarnpkg.com/braintree-web/-/braintree-web-3.44.2.tgz#87c671ee3739d9af699901e66f438281c143c397"
+  integrity sha512-4+Q8phtjTkdqJ9fI7ofOTB5KkwhFtnkl+PsfaunKFcJCyjCLT2AU9CsnB6tIrba16A3KnxZs0+gdRPFcQVc5og==
+  dependencies:
+    "@braintree/asset-loader" "0.2.1"
+    "@braintree/browser-detection" "1.7.0"
+    "@braintree/class-list" "0.1.0"
+    "@braintree/iframer" "1.0.3"
+    "@braintree/sanitize-url" "3.1.0"
+    "@braintree/wrap-promise" "1.1.1"
+    card-validator "6.1.0"
+    credit-card-type "8.2.0"
+    framebus "3.0.2"
+    inject-stylesheet "1.0.0"
+    promise-polyfill "8.1.0"
+    restricted-input "1.2.7"
+
 brorand@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
@@ -2434,6 +2504,13 @@ capture-exit@^2.0.0:
   integrity sha512-PiT/hQmTonHhl/HFGN+Lx3JJUznrVYJ3+AQsnthneZbvW7x+f08Tk7yLJTLEOUvBTbduLeeBkxEaYXUOUrRq6g==
   dependencies:
     rsvp "^4.8.4"
+
+card-validator@6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/card-validator/-/card-validator-6.1.0.tgz#d36bfc9ff8ee0c69e02d676b2b27f7b6d2dae92d"
+  integrity sha512-YAeCZvHFXj7zxYSjfQEOmL5c19+Bfpdi1hl9BIeAE7a56V3jPO9CbIVwSPPL4yoVPVjfE4Osp44c05UeELhu4A==
+  dependencies:
+    credit-card-type "^8.0.0"
 
 case-sensitive-paths-webpack-plugin@2.2.0:
   version "2.2.0"
@@ -2895,6 +2972,11 @@ create-react-context@^0.2.1:
   dependencies:
     fbjs "^0.8.0"
     gud "^1.0.0"
+
+credit-card-type@8.2.0, credit-card-type@^8.0.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/credit-card-type/-/credit-card-type-8.2.0.tgz#507a43b257f0f3b8bd4d4b339a419741fc7e6236"
+  integrity sha512-+1kZKW717eDTbZ1/EjkEi4+UrD2SygU2Iujn/VlrMHXloGW/y5GqPlQ/KgT4gaoDmWyufBfm/CAzNkpeccfMtA==
 
 cross-spawn@6.0.5, cross-spawn@^6.0.0, cross-spawn@^6.0.5:
   version "6.0.5"
@@ -4273,6 +4355,11 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
+framebus@3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/framebus/-/framebus-3.0.2.tgz#0c99c70cb507522aae6ed485e1317fc913873a8a"
+  integrity sha512-OqhYkhgRYlpKZoSl5EA3whKh8O8omFPCzf7MGzFqC6CtrT8lg7evNgU6QdjC3uY3ATq5saMDiY5HJ8KGiGDYCA==
+
 fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
@@ -4964,6 +5051,11 @@ ini@^1.3.5, ini@~1.3.0:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
   integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
+
+inject-stylesheet@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/inject-stylesheet/-/inject-stylesheet-1.0.0.tgz#f673047458ee58f109fee4cfb66b09f362ccc261"
+  integrity sha1-9nMEdFjuWPEJ/uTPtmsJ82LMwmE=
 
 inquirer@6.2.2:
   version "6.2.2"
@@ -8036,6 +8128,16 @@ promise-inflight@^1.0.1:
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
+promise-polyfill@8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-8.1.0.tgz#30059da54d1358ce905ac581f287e184aedf995d"
+  integrity sha512-OzSf6gcCUQ01byV4BgwyUCswlaQQ6gzXc23aLQWhicvfX9kfsUiUhgt3CCQej8jDnl8/PhGF31JdHX2/MzF3WA==
+
+promise-polyfill@^8.1.0:
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-8.1.3.tgz#8c99b3cf53f3a91c68226ffde7bde81d7f904116"
+  integrity sha512-MG5r82wBzh7pSKDRa9y+vllNHz3e3d4CNj1PQE4BQYxLme0gKYYBm9YENq+UkEikyZ0XbiGWxYlVw3Rl9O/U8g==
+
 promise@8.0.2:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/promise/-/promise-8.0.2.tgz#9dcd0672192c589477d56891271bdc27547ae9f0"
@@ -8066,7 +8168,7 @@ prop-types-extra@^1.1.0:
     react-is "^16.3.2"
     warning "^3.0.0"
 
-prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.0, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.0, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -8329,6 +8431,13 @@ react-is@^16.3.2, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
+
+react-loadable@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/react-loadable/-/react-loadable-5.5.0.tgz#582251679d3da86c32aae2c8e689c59f1196d8c4"
+  integrity sha512-C8Aui0ZpMd4KokxRdVAm2bQtI03k2RMRNzOB+IipV3yxFTSVICv7WoUr5L9ALB5BmKO1iHgZtWM8EvYG83otdg==
+  dependencies:
+    prop-types "^15.5.0"
 
 react-overlays@^1.2.0:
   version "1.2.0"
@@ -8814,6 +8923,13 @@ restore-cursor@^2.0.0:
   dependencies:
     onetime "^2.0.0"
     signal-exit "^3.0.2"
+
+restricted-input@1.2.7:
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/restricted-input/-/restricted-input-1.2.7.tgz#e1298f5fd8c430cc2d8e6bb1175524023205cb34"
+  integrity sha1-4SmPX9jEMMwtjmuxF1UkAjIFyzQ=
+  dependencies:
+    "@braintree/browser-detection" "^1.5.0"
 
 ret@~0.1.10:
   version "0.1.15"

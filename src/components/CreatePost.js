@@ -9,7 +9,6 @@ import Spinner from 'react-bootstrap/Spinner';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import axios from '../axios';
-import { connect } from 'react-redux';
 
 class CreatePost extends React.Component {
     state = {
@@ -49,6 +48,7 @@ class CreatePost extends React.Component {
             username: this.state.user.username,
             value: this.state.postValue,
             category: this.state.paidContent ? 'premium' : 'public',
+            postValue: this.state.paidContent ? this.state.postValue : 0,
             youtubeVideoUrl: this.state.youtubeVideo ? `${this.state.youtubeVideoUrl}` : null
         }
         this.setState({ submit: true, success: null, error: null });
@@ -64,7 +64,7 @@ class CreatePost extends React.Component {
     }
     verifyValue = () => {
         const limitCheck = this.state.user.accountLevel === 1 ? this.state.postValue <= 1 : this.state.user.accountLevel === 2  ? this.state.postValue <= 5 : this.state.user.accountLevel === 3 ? this.state.postValue <= 10 : false;
-        this.setState({ validValue: this.state.postValue.match('^[0-9]+(\.[0-9]{1,2})?$') && limitCheck });
+        this.setState({ validValue: this.state.postValue.match('^[0-9]+([0-9]{1,2})?$') && limitCheck });
     }
     render() {
         const canSubmit = (this.state.youtubeVideo ? (this.state.validUrl && this.state.title.length > 0 && this.state.content.length > 0) : this.state.title.length > 0 && this.state.content.length > 0);
