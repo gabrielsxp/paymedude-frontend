@@ -9,6 +9,8 @@ const initialState = {
     displayCheckoutModal: false,
     checkoutValue: 0,
     checkoutPostId: null,
+    checkoutPostTitle: null,
+    seller: null,
     likedPosts: []
 }
 
@@ -100,6 +102,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 checkoutValue: action.checkoutValue
             }
+        case 'SET_CHECKOUT_POST_TITLE':
+            return {
+                ...state,
+                checkoutPostTitle: action.checkoutPostTitle
+            }
         case 'DISPLAY_CHECKOUT_MODAL':
             console.log(state.displayCheckoutModal, action.display);
             return {
@@ -110,6 +117,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 checkoutPostId: action.id
+            }
+        case 'SET_SELLER':
+            return {
+                ...state,
+                seller: action.seller
             }
         default:
             break;

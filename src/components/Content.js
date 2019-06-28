@@ -14,8 +14,18 @@ class Content extends React.Component {
         paymentDialogLoad: false
     }
     componentDidMount(){
-        console.log(this.props.user);
-        this.getPosts(true);
+        this.props.profile ? this.getProfilePosts(true) : this.getPosts(true); 
+    }
+    getProfilePosts = (init = false, resetOffset = false) => {
+        axios.get(`${this.props.profilePath}/posts?offset=${!resetOffset ? this.state.offset : 0}&category=${this.state.category.toLowerCase()}`)
+            .then((response) => {
+                init ? this.props.initPosts(response.data.posts) : this.props.loadPosts(response.data.posts);
+                
+                this.setState({ loading: false, limit: response.data.limit, offset: this.state.offset + 6 });
+            })
+            .catch((error) => {
+                this.setState({ loading: false, error });
+            })
     }
     getPosts = (init = false, resetOffset = false) => {
         axios.get(`/posts?offset=${!resetOffset ? this.state.offset : 0}&category=${this.state.category.toLowerCase()}`)
@@ -63,13 +73,21 @@ class Content extends React.Component {
     changeCategory = (value) => {
         this.setState({ offset: 0, category: value});
     }
-    handlePaymentDialogShow = (value, id) => {
+    handlePaymentDialogShow = (value, postId, sellerId, sellerUsername, sellerEmail, productName) => {
+        const seller = {
+            sellerId,
+            sellerUsername,
+            sellerEmail
+        };
+        console.log(value, postId, sellerId, sellerUsername, sellerEmail, productName);
         this.props.checkOutValue(value);
-        this.props.setPostId(id);
+        this.props.checkoutProduct(productName);
+        this.props.setPostId(postId);
+        this.props.setSellerId(seller);
         this.props.dispatchDisplayCheckoutModal(true);
     }
     render() {
-        return !this.state.loading && this.props.posts && this.props.user ? <Posts paymentDialogLoad={this.props.displayCheckoutModal} handlePaymentDialogShow={this.handlePaymentDialogShow} category={this.state.category} changeCategory={this.changeCategory} profileLink={true} posts={this.props.posts} user={this.props.user} limit={this.state.limit} getPosts={this.getPosts} likePost={this.likePost} unlikePost={this.unlikePost} /> : <Container fluid><Row><Spinner style={{ margin: '50px auto' }} animation="border" role="status">
+        return !this.state.loading && this.props.posts && this.props.user ? <Posts profile={this.props.profile} getProfilePosts={this.getProfilePosts} paymentDialogLoad={this.props.displayCheckoutModal} handlePaymentDialogShow={this.handlePaymentDialogShow} category={this.state.category} changeCategory={this.changeCategory} profileLink={true} posts={this.props.posts} user={this.props.user} limit={this.state.limit} getPosts={this.getPosts} likePost={this.likePost} unlikePost={this.unlikePost} /> : <Container fluid><Row><Spinner style={{ margin: '50px auto' }} animation="border" role="status">
             <span className="sr-only">Loading...</span>
         </Spinner></Row></Container>
     }
@@ -81,7 +99,8 @@ const mapStateToProps = state => {
         user: state.user,
         posts: state.posts,
         profileOwner: state.profileOwner,
-        displayCheckoutModal: state.displayCheckoutModal
+        displayCheckoutModal: state.displayCheckoutModal,
+        checkoutPostTitle: state.checkoutPostTitle
     }
 }
 
@@ -89,8 +108,10 @@ const mapDispatchToProps = dispatch => {
     return {
         loadPosts: (posts) => dispatch({ type: 'POSTS_LOAD', posts }),
         initPosts: (posts) => dispatch({ type: 'POSTS_INIT', posts }),
-        setPostId: (id) => dispatch({type: 'SET_POST_ID', id}),
+        setPostId: (postId) => dispatch({type: 'SET_POST_ID', id: postId}),
+        setSellerId: (seller) => dispatch({type: 'SET_SELLER', seller}),
         dispatchDisplayCheckoutModal: (display) => dispatch( {type: 'DISPLAY_CHECKOUT_MODAL', display }),
+        checkoutProduct: (checkoutPostTitle) => dispatch({type: 'SET_CHECKOUT_POST_TITLE', checkoutPostTitle }),
         checkOutValue: (value) => dispatch({type: 'SET_CHECKOUT_VALUE', checkoutValue: value }),
         incrementLikePost: (post, index, user) => dispatch({ type: 'POST_INCREMENT_LIKE', post, index, user }),
         decrementLikePost: (post, index, user) => dispatch({ type: 'POST_DECREMENT_LIKE', post, index, user }),

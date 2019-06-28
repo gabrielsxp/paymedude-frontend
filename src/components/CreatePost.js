@@ -44,6 +44,7 @@ class CreatePost extends React.Component {
             title: this.state.title,
             author: this.state.user._id,
             authorImage: this.state.user.image,
+            authorEmail: this.state.user.email,
             content: this.state.content,
             username: this.state.user.username,
             value: this.state.postValue,
@@ -64,7 +65,7 @@ class CreatePost extends React.Component {
     }
     verifyValue = () => {
         const limitCheck = this.state.user.accountLevel === 1 ? this.state.postValue <= 1 : this.state.user.accountLevel === 2  ? this.state.postValue <= 5 : this.state.user.accountLevel === 3 ? this.state.postValue <= 10 : false;
-        this.setState({ validValue: this.state.postValue.match('^[0-9]+([0-9]{1,2})?$') && limitCheck });
+        this.setState({ validValue: this.state.postValue.match('^[0-9]+(\.[0-9]{1,2})?$') && limitCheck });
     }
     render() {
         const canSubmit = (this.state.youtubeVideo ? (this.state.validUrl && this.state.title.length > 0 && this.state.content.length > 0) : this.state.title.length > 0 && this.state.content.length > 0);
@@ -91,7 +92,7 @@ class CreatePost extends React.Component {
                                     <Form.Check
                                         checked={this.state.youtubeVideo}
                                         type='checkbox'
-                                        label='Embbed a Youtube Video'
+                                        label='Embed a Youtube Video'
                                         id='premium-option-1'
                                         style={{ margin: '20px 0' }}
                                         onChange={e => this.setState({ youtubeVideo: e.target.checked })}

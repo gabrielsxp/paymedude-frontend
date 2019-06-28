@@ -25,6 +25,7 @@ class Profile extends React.Component {
         password: '',
         newPassword: '',
         bio: null,
+        file: null,
         success: null,
         validPasword: null,
         validNewPasword: null,
@@ -79,7 +80,35 @@ class Profile extends React.Component {
             fontColor: this.state.fontColor,
             borderColor: this.state.borderColor,
         }
-        axios.patch(`${this.props.location.pathname}`, this.state.changePassword ? dataPassword : data)
+        if(!this.state.file){
+            axios.patch(`${this.props.location.pathname}`, this.state.changePassword ? dataPassword : data)
+                .then((response) => {
+                    this.setState({ submit: false, success: 'Profile Updated !' })
+                    this.props.userChanged();
+                    this.getProfile();
+                    this.handleClose();
+                })
+                .catch((error) => {
+                    this.setState({ submit: false, error });
+                    this.handleClose();
+                })
+        } else {
+            const data = new FormData();
+            data.append('bio', this.state.bio);
+            data.append('bannerColor', this.state.bannerColor);
+            data.append('fontColor', this.state.fontColor);
+            data.append('borderColor', this.state.borderColor);
+            data.append('file', this.state.file);
+
+            const passwordData = new FormData();
+            passwordData.append('password', this.state.password);
+            passwordData.append('bio', this.state.bio);
+            passwordData.append('bannerColor', this.state.bannerColor);
+            passwordData.append('fontColor', this.state.fontColor);
+            passwordData.append('borderColor', this.state.borderColor);
+            passwordData.append('file', this.state.file);
+
+            axios.patch(`${this.props.location.pathname}`, this.state.changePassword ? dataPassword : data, { headers: {  'Content-Type': 'multipart/form-data' }})
             .then((response) => {
                 this.setState({ submit: false, success: 'Profile Updated !' })
                 this.props.userChanged();
@@ -90,6 +119,7 @@ class Profile extends React.Component {
                 this.setState({ submit: false, error });
                 this.handleClose();
             })
+        }
     }
     handleChangeBannerColor = (color, event) => {
         this.setState({ bannerColor: color.hex });
@@ -132,7 +162,7 @@ class Profile extends React.Component {
                         {
                             this.state.loading === false && this.state.user !== null ?
                                 <Card style={{ width: '18rem' }}>
-                                    <Card.Img variant="top" src={`http://127.0.0.1:3001/assets/${this.state.user.fullImage}`} />
+                                    <Card.Img variant="top" src={`http://127.0.0.1:3001/${this.state.user.fullImage}`} />
                                     <Card.Body>
                                         <Card.Title>{this.state.user.username}</Card.Title>
                                         <Card.Text>
@@ -212,13 +242,7 @@ class Profile extends React.Component {
                                             <Form.Control value={this.state.bio} onChange={e => this.setState({ bio: e.target.value })} as="textarea" rows="3" />
                                         </Form.Group>
                                         <InputGroup className="mb-3">
-                                            <FormControl
-                                            />
-                                            <InputGroup.Append>
-                                            <Button variant="outline-secondary">
-                                            <Form.Text>Choose your image</Form.Text>
-                                            </Button>
-                                            </InputGroup.Append>
+                                            <FormControl onChange={e => this.setState({file: e.target.files[0]})} type="file"/>
                                         </InputGroup>
                                 </Form>
                                 </Col>

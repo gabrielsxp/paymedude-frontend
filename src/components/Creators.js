@@ -121,7 +121,7 @@ class Creators extends React.Component {
                         this.state.creators ? this.state.creators.map((creator, index) => {
                             return <Col key={index} xs={12} md={6} lg={4} style={{ marginTop: '50px' }}>
                                 <Card style={{ width: '18rem' }}>
-                                    <Card.Img variant="top" src={`http://127.0.0.1:3001/assets/${creator.fullImage}`} />
+                                    <Card.Img variant="top" src={`http://127.0.0.1:3001/${creator.fullImage}`} />
                                     <Card.Body>
                                         <Card.Title>{creator.username}</Card.Title>
                                         <Card.Text>
@@ -146,7 +146,7 @@ class Creators extends React.Component {
                 </Row>
                 <hr />
                 {
-                    this.state.currentAction !== 'search' ?
+                    this.state.currentAction !== 'search' || this.state.limit === false ?
                         <Button variant="secondary" type="null" block size="sm" onClick={e => this.chooseAction(false)} disabled={this.state.loading || this.state.limit}>
                             {!this.state.loading ? 'Load More' : <div>
                                         <Spinner

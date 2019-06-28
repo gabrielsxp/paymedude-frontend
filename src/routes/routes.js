@@ -59,7 +59,7 @@ class Routes extends React.Component {
                 <PrivateRoute path="/account/:username" exact component={Profile}></PrivateRoute>
                 <PrivateRoute path="/posts/new" exact component={CreatePost}></PrivateRoute>
                 <PrivateRoute path="/dashboard" exact component={Dashboard}></PrivateRoute>
-                <PrivateRoute path="/main" exact component={Content}></PrivateRoute>
+                <PrivateRoute path="/main" exact render={(props) => <Content {...props} profile={false} />}></PrivateRoute>
             </Switch>
         </Router>
     }

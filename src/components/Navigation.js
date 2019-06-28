@@ -47,9 +47,11 @@ class Navigation extends React.Component {
                                             alignRight={true}
                                             drop="down"
                                             title={<div style={{display: "inline-block"}}>
-                                                <Image src={`http://127.0.0.1:3001/assets/${this.props.user.image}`} roundedCircle ></Image>
+                                                <Image src={`http://127.0.0.1:3001/${this.props.user.image}`} roundedCircle ></Image>
                                             </div>
                                             }>
+                                            <div className="dropdown-item">Balance: {this.props.user && this.props.user.creator ? <b>${this.props.user.balance}</b> : null}</div>
+                                            <NavDropdown.Divider />
                                             <Link to={`/account/${this.props.user.username}`} className="dropdown-item">Edit Profile</Link>
                                             <Link to={`/profile/${this.props.user.username}`} className="dropdown-item">Public Profile</Link>
                                             <Link to={`/dashboard`} className="dropdown-item">Dashboard</Link>

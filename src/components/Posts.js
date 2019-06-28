@@ -46,7 +46,7 @@ const Styles = styled.i`
         border-radius: 5px 5px 0 0;
         border: 2px solid #dedede;
         background: rgb(52,227,101);
-background: linear-gradient(90deg, rgba(52,227,101,0.6867121848739496) 28%, rgba(0,255,244,0.6166841736694677) 76%);   
+        background: linear-gradient(90deg, rgba(52,227,101,0.6867121848739496) 28%, rgba(0,255,244,0.6166841736694677) 76%);   
         z-index: 0;
         display: flex;
         justify-content: center;
@@ -86,7 +86,7 @@ background: linear-gradient(90deg, rgba(52,227,101,0.6867121848739496) 28%, rgba
     }
 `;
 
-const posts = ({ posts, limit, user, getPosts, likePost, unlikePost, profileLink, changeCategory, category, paymentDialogLoad, handlePaymentDialogShow  }) => {
+const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePost, unlikePost, profileLink, changeCategory, category, paymentDialogLoad, handlePaymentDialogShow  }) => {
     const classNameLikedPost = `fas fa-heart red`;
     const classNameNotLikedPost = `fas fa-heart black`;
     return <Container style={{ marginTop: '50px', paddingBottom: '80px' }}>
@@ -100,7 +100,7 @@ const posts = ({ posts, limit, user, getPosts, likePost, unlikePost, profileLink
                     <option>Public</option>
                     <option>Premium</option>
                 </Form.Control>
-                <Button onClick={e => getPosts(true, true)} variant="outline-primary">Sort</Button>
+                <Button onClick={() => profile ? getProfilePosts(true, true) : getPosts(true, true)} variant="outline-primary">Sort</Button>
             </Form>
         </div>
         <Row>
@@ -125,7 +125,7 @@ const posts = ({ posts, limit, user, getPosts, likePost, unlikePost, profileLink
                                         <Card.Body>
                                             <div className="userSection" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '25px', alignContent: 'center' }}>
                                                 <div>
-                                                    <Image style={{ marginRight: '15px' }} src={`http://127.0.0.1:3001/assets/${post.authorImage}`} roundedCircle></Image>
+                                                    <Image style={{ marginRight: '15px' }} src={`http://127.0.0.1:3001/${post.authorImage}`} roundedCircle></Image>
                                                     {
                                                         profileLink ? <Link style={{ color: "#333", fontWeight: "bold" }} to={`/profile/${post.username}`}>{post.username}</Link> : post.username
                                                     }
@@ -161,7 +161,7 @@ const posts = ({ posts, limit, user, getPosts, likePost, unlikePost, profileLink
                                             </Styles>
                                         </Card.Footer>
                                     </Card>
-                                    : !user.unlockedPosts.includes(post._id) ?
+                                    : !user.unlockedPosts.includes(post._id) && user._id !== post.author ?
                                         <Styles>
                                             <div>
                                                 <div className="privateContent">
@@ -169,8 +169,17 @@ const posts = ({ posts, limit, user, getPosts, likePost, unlikePost, profileLink
                                                         <i className="fas fa-lock"></i> <p className="text-muted">Locked Content</p>
                                                         <Button variant="outline-primary">See Plans</Button>
                                                         or
-                                                        <Button onClick={() => handlePaymentDialogShow(post.postValue, post._id)} variant="primary"><i className="fas fa-unlock"></i> post for <b>${post.postValue}</b></Button>
+                                                        <Button onClick={() => handlePaymentDialogShow(post.postValue, post._id, post.author, post.username, post.authorEmail, post.title)} variant="primary"><i className="fas fa-unlock"></i> post for <b>${post.postValue}</b></Button>
                                                     </div>
+                                                </div>
+                                                <div className="userSection" style={{ border: '1px solid rgba(0,0,0,.125)', backgroundColor: 'rgba(0,0,0,.03)', padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', alignContent: 'center' }}>
+                                                    <div>
+                                                        <Image style={{ marginRight: '15px' }} src={`http://127.0.0.1:3001/${post.authorImage}`} roundedCircle></Image>
+                                                        {
+                                                            profileLink ? <Link style={{ color: "#333", fontWeight: "bold" }} to={`/profile/${post.username}`}>{post.username}</Link> : post.username
+                                                        }
+                                                    </div>
+                                                    <div><i className="far fa-clock"></i>&nbsp;{post.createdAt}</div>
                                                 </div>
                                                 <div className="premiumPostTitle"><b>{post.title}</b></div>
                                             </div>
@@ -186,7 +195,7 @@ const posts = ({ posts, limit, user, getPosts, likePost, unlikePost, profileLink
                                             <Card.Body>
                                                 <div className="userSection" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '25px', alignContent: 'center' }}>
                                                     <div>
-                                                        <Image style={{ marginRight: '15px' }} src={`http://127.0.0.1:3001/assets/${post.authorImage}`} roundedCircle></Image>
+                                                        <Image style={{ marginRight: '15px' }} src={`http://127.0.0.1:3001/${post.authorImage}`} roundedCircle></Image>
                                                         {
                                                             profileLink ? <Link style={{ color: "#333", fontWeight: "bold" }} to={`/profile/${post.username}`}>{post.username}</Link> : post.username
                                                         }
@@ -195,8 +204,6 @@ const posts = ({ posts, limit, user, getPosts, likePost, unlikePost, profileLink
                                                 </div>
                                                 <Card.Title>{post.title}</Card.Title>
                                                 <Card.Text>
-                                                    {post._id}
-                                                    <br />
                                                     {post.content}
                                                 </Card.Text>
                                             </Card.Body>
@@ -239,7 +246,7 @@ const posts = ({ posts, limit, user, getPosts, likePost, unlikePost, profileLink
             }
         </Row>
         {
-            !limit && posts.length > 0 ? <Button style={{ marginTop: '50px' }} variant="secondary" block size="sm" onClick={() => getPosts(false)}>Load More</Button> : <Alert style={{ marginTop: '50px' }} variant="primary">
+            !limit && posts.length > 0 ? <Button style={{ marginTop: '50px' }} variant="secondary" block size="sm" onClick={() => profile ? getProfilePosts(false) : getPosts(false)}>Load More</Button> : <Alert style={{ marginTop: '50px' }} variant="primary">
                 <p>All posts were loaded</p>
             </Alert>
         }
