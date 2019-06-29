@@ -120,7 +120,8 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                 <iframe title={post.title + post.index} id="ytplayer" type="text/html" width="480" height="360"
                                                     src={`http://www.youtube.com/embed/${post.youtubeVideoUrl}?autoplay=0`}
                                                     frameBorder="0" />
-                                                : <Image src="https://via.placeholder.com/480x360"></Image>
+                                                : post.image ? <Image src={`http://127.0.0.1:3001/${post.image}`}></Image>
+                                                : null
                                         }
                                         <Card.Body>
                                             <div className="userSection" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '25px', alignContent: 'center' }}>
@@ -134,9 +135,13 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                             </div>
                                             <Card.Title>{post.title}</Card.Title>
                                             <Card.Text>
-                                                {post._id}
                                                 <br />
-                                                {post.content}
+                                                {
+                                                    post.content.split('\n')[0]
+                                                }
+                                                <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '25px'}}>
+                                                    <Link to={`/posts/${post._id}`}><Button variant="outline-primary">Read More</Button></Link>
+                                                </div>
                                             </Card.Text>
                                         </Card.Body>
                                         <Card.Footer>
@@ -204,7 +209,12 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                 </div>
                                                 <Card.Title>{post.title}</Card.Title>
                                                 <Card.Text>
-                                                    {post.content}
+                                                    {
+                                                        post.content.split('\n'[0])
+                                                    }
+                                                    <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '25px'}}>
+                                                        <Link to={`/posts/${post._id}`}><Button variant="outline-primary">Read More</Button></Link>
+                                                    </div>
                                                 </Card.Text>
                                             </Card.Body>
                                             <Card.Footer>
@@ -216,7 +226,7 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                                     <i
                                                                         onClick={() => user.likedPosts.includes(post._id) ? unlikePost(post._id, index) : likePost(post._id, index)}
                                                                         style={{ cursor: user ? 'pointer' : 'auto' }}
-                                                                        className={`${user.likedPosts.includes(post._id) ? classNameLikedPost : classNameNotLikedPost}`}>
+                                                                        className={`${ user.likedPosts.includes(post._id) ? classNameLikedPost : classNameNotLikedPost}`}>
                                                                     </i> : <i
                                                                         onClick={() => likePost(post._id, index)}
                                                                         style={{ cursor: user ? 'pointer' : 'auto' }}

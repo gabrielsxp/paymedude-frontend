@@ -132,9 +132,12 @@ class Creators extends React.Component {
                                             {
                                                 this.props.user ?
                                                     <Button
+                                                        disabled={this.state.subscribing}
                                                         onClick={() => !this.props.user.creators.includes(creator.username) ? this.subscribe(creator.username) : this.unsubscribe(creator.username)}
                                                         variant={this.props.user.creators.includes(creator.username) ? `success` : this.props.user.creators.includes(creator.username) ? `danger` : `info`}>
-                                                        {this.props.user.creators.includes(creator.username) ? <i className="fas fa-check"></i> : this.props.user.creators.includes(creator.username) ? <i className="fas fa-times"></i> : <i className="fas fa-plus"></i>}
+                                                        {
+                                                            this.state.subscribing ? <i class="fas fa-ellipsis-h"></i> : this.props.user.creators.includes(creator.username) ? <i className="fas fa-check"></i> : this.props.user.creators.includes(creator.username) ? <i className="fas fa-times"></i> : <i className="fas fa-plus"></i>
+                                                        }
                                                     </Button> : null
                                             }
                                         </div>

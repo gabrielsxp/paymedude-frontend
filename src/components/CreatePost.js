@@ -16,8 +16,11 @@ class CreatePost extends React.Component {
         user: {username: ''},
         youtubeVideo: false,
         youtubeVideoUrl: '',
+        postImage: false,
+        file: null,
         validUrl: false,
         content: '',
+        imageDescription: null,
         paidContent: false,
         validValue: true,
         postValue: '1.00',
@@ -40,35 +43,81 @@ class CreatePost extends React.Component {
     }
     createPost = (e) => {
         e.preventDefault();
-        const postData = {
-            title: this.state.title,
-            author: this.state.user._id,
-            authorImage: this.state.user.image,
-            authorEmail: this.state.user.email,
-            content: this.state.content,
-            username: this.state.user.username,
-            value: this.state.postValue,
-            category: this.state.paidContent ? 'premium' : 'public',
-            postValue: this.state.paidContent ? this.state.postValue : 0,
-            youtubeVideoUrl: this.state.youtubeVideo ? `${this.state.youtubeVideoUrl}` : null
-        }
-        this.setState({ submit: true, success: null, error: null });
-        axios.post('/posts', postData)
+        if(this.state.postImage && this.state.file){
+            let data = new FormData();
+            data.append('title', this.state.title);
+            data.append('author', this.state.user._id);
+            data.append('authorImage', this.state.user.image);
+            data.append('authorEmail', this.state.user.email);
+            data.append('content', this.state.content);
+            data.append('username', this.state.user.username);
+            data.append('value', this.state.postValue);
+            data.append('category', this.state.paidContent ? 'premium' : 'public');
+            data.append('postValue', this.state.paidContent ? this.state.postValue : 0);
+            data.append('file', this.state.file);
+            data.append('imageDescription', this.state.imageDescription);
+
+            this.setState({ submit: true, success: null, error: null });
+            axios.post('/posts', data, { headers: {  'Content-Type': 'multipart/form-data' }})
             .then((response) => {
-                this.setState({ submit: false, success: true, title: '', content: '', youtubeVideoUrl: '' });
+                this.setState({ 
+                    submit: false, 
+                    success: true, 
+                    title: '', 
+                    content: '', 
+                    youtubeVideoUrl: '',
+                    youtubeVideo: false,
+                    postImage: false,
+                    imageDescription: '',
+                    file: null,
+                });
                 console.log(response);
             })
             .catch((error) => {
                 this.setState({ submit: false, error: error });
                 console.log(error);
             })
+        } else {
+            const postData = {
+                title: this.state.title,
+                author: this.state.user._id,
+                authorImage: this.state.user.image,
+                authorEmail: this.state.user.email,
+                content: this.state.content,
+                username: this.state.user.username,
+                value: this.state.postValue,
+                category: this.state.paidContent ? 'premium' : 'public',
+                postValue: this.state.paidContent ? this.state.postValue : 0,
+                youtubeVideoUrl: this.state.youtubeVideo ? `${this.state.youtubeVideoUrl}` : null
+            }
+            this.setState({ submit: true, success: null, error: null });
+            axios.post('/posts', postData)
+                .then((response) => {
+                    this.setState({ 
+                        submit: false, 
+                        success: true, 
+                        title: '', 
+                        content: '', 
+                        youtubeVideoUrl: '',
+                        youtubeVideo: false,
+                        postImage: false,
+                        postDescription: '',
+                        file: null,
+                    });
+                    console.log(response);
+                })
+                .catch((error) => {
+                    this.setState({ submit: false, error: error });
+                    console.log(error);
+                })
+        }
     }
     verifyValue = () => {
         const limitCheck = this.state.user.accountLevel === 1 ? this.state.postValue <= 1 : this.state.user.accountLevel === 2  ? this.state.postValue <= 5 : this.state.user.accountLevel === 3 ? this.state.postValue <= 10 : false;
         this.setState({ validValue: this.state.postValue.match('^[0-9]+(\.[0-9]{1,2})?$') && limitCheck });
     }
     render() {
-        const canSubmit = (this.state.youtubeVideo ? (this.state.validUrl && this.state.title.length > 0 && this.state.content.length > 0) : this.state.title.length > 0 && this.state.content.length > 0);
+        const canSubmit = (this.state.youtubeVideo ? (this.state.validUrl && this.state.title.length > 0 && this.state.content.length > 0) : this.state.postImage ? (this.state.title.length > 0 && this.state.content.length > 0 && this.state.file && this.state.imageDescription) :  this.state.title.length > 0 && this.state.content.length > 0);
         return <div style={{ padding: '50px 0' }}>
             <Container>
                 <Row>
@@ -95,13 +144,21 @@ class CreatePost extends React.Component {
                                         label='Embed a Youtube Video'
                                         id='premium-option-1'
                                         style={{ margin: '20px 0' }}
-                                        onChange={e => this.setState({ youtubeVideo: e.target.checked })}
+                                        onChange={e => this.setState({ youtubeVideo: e.target.checked, postImage: false })}
                                     />
-                                        <Form.Check
+                                    <Form.Check
+                                        checked={this.state.postImage}
+                                        type='checkbox'
+                                        label='Post Image'
+                                        id='premium-option-2'
+                                        style={{ margin: '20px 0' }}
+                                        onChange={e => this.setState({ postImage: e.target.checked, youtubeVideo: false })}
+                                    />
+                                    <Form.Check
                                         checked={this.state.user.paidContent}
                                         type='checkbox'
                                         label='Check to monetize this content'
-                                        id='premium-option-2'
+                                        id='premium-option-3'
                                         style={{ margin: '20px 0' }}
                                         onChange={e => this.setState({ paidContent: e.target.checked })}
                                     />
@@ -117,6 +174,19 @@ class CreatePost extends React.Component {
                                 </InputGroup.Prepend>
                                 <FormControl value={this.state.youtubeVideoUrl} onChange={e => this.setState({ youtubeVideoUrl: e.target.value, success: null, error: null  })} isInvalid={!this.state.validUrl} isValid={this.state.validUrl} onBlur={this.checkUrl} id="basic-url" aria-describedby="basic-addon3" />
                             </InputGroup> : null
+                        }
+                        {
+                            this.state.postImage ? 
+                                <div>
+                                    <InputGroup className="mb-3">
+                                        <FormControl onChange={e => this.setState({file: e.target.files[0]})} type="file"/>
+                                    </InputGroup>
+                                    <p className="text-muted"><b className="text-danger"> Warning: </b>This image will be resize to 1280x1024 and 480x360</p>
+                                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                                        <Form.Label>Full post image description</Form.Label>
+                                        <Form.Control onChange={e => this.setState({imageDescription: e.target.value})} as="textarea" rows="3" />
+                                    </Form.Group>
+                                </div> : null
                         }
                         {
                             this.state.paidContent ? <div><Form.Text className="text-muted">

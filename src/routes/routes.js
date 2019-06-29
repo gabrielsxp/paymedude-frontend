@@ -10,6 +10,7 @@ import Content from '../components/Content';
 import Creators from '../components/Creators';
 import PublicProfile from '../components/PublicProfile';
 import Navigation from '../components/Navigation';
+import Post from '../components/Post';
 import axios from '../axios';
 import { connect } from 'react-redux';
 import { isAuthenticated, getUserData } from '../services/auth';
@@ -56,8 +57,9 @@ class Routes extends React.Component {
                 <Route path="/signin" exact render={props => !isAuthenticated() ? <SignIn {...props}/> : <Redirect to={{ pathname: '/dashboard', state: { from: props.location } }} />}></Route>
                 <Route path="/creators" exact component={Creators}></Route>
                 <Route path="/profile/:user" exact component={PublicProfile}></Route>
-                <PrivateRoute path="/account/:username" exact component={Profile}></PrivateRoute>
                 <PrivateRoute path="/posts/new" exact component={CreatePost}></PrivateRoute>
+                <PrivateRoute path="/posts/:postId" exact component={Post}></PrivateRoute>
+                <PrivateRoute path="/account/:username" exact component={Profile}></PrivateRoute>
                 <PrivateRoute path="/dashboard" exact component={Dashboard}></PrivateRoute>
                 <PrivateRoute path="/main" exact render={(props) => <Content {...props} profile={false} />}></PrivateRoute>
             </Switch>

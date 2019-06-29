@@ -9,6 +9,7 @@ import axios from '../axios';
 class Content extends React.Component {
     state = {
         loading: null,
+        likeActionLoad: false,
         offset: 0,
         category: 'Public',
         paymentDialogLoad: false
@@ -38,7 +39,7 @@ class Content extends React.Component {
             })
     }
     likePost = (id, index) => {
-        console.log(id, index);
+        this.setState({likeActionLoad: true});
         axios.patch(`/posts/${id}/like`)
             .then((response) => {
                 console.log('like post');
@@ -46,14 +47,14 @@ class Content extends React.Component {
                 this.props.incrementLikePost(response.data.post, index, response.data.user);
                 console.log(this.props.user.likedPosts);
                 this.props.userChanged();
-                this.setState({ ok: true });
+                this.setState({ ok: true, likeActionLoad: false });
             })
             .catch((error) => {
                 this.setState({ error });
             })
     }
     unlikePost = (id, index) => {
-        console.log(id);
+        this.setState({likeActionLoad: true});
         axios.patch(`/posts/${id}/unlike`)
             .then((response) => {
                 console.log('unlike post');
@@ -63,7 +64,7 @@ class Content extends React.Component {
                     this.props.decrementLikePost(response.data.post, index, response.data.user);
                     console.log(this.props.user.likedPosts);
                     this.props.userChanged();
-                    this.setState({ ok: true });
+                    this.setState({ ok: true, likeActionLoad: false });
                 }
             })
             .catch((error) => {
@@ -110,6 +111,7 @@ const mapDispatchToProps = dispatch => {
         initPosts: (posts) => dispatch({ type: 'POSTS_INIT', posts }),
         setPostId: (postId) => dispatch({type: 'SET_POST_ID', id: postId}),
         setSellerId: (seller) => dispatch({type: 'SET_SELLER', seller}),
+        userChanged: () => dispatch({ type: 'USER_CHANGED' }),
         dispatchDisplayCheckoutModal: (display) => dispatch( {type: 'DISPLAY_CHECKOUT_MODAL', display }),
         checkoutProduct: (checkoutPostTitle) => dispatch({type: 'SET_CHECKOUT_POST_TITLE', checkoutPostTitle }),
         checkOutValue: (value) => dispatch({type: 'SET_CHECKOUT_VALUE', checkoutValue: value }),
