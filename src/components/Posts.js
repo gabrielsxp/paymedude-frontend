@@ -120,8 +120,13 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                 <iframe title={post.title + post.index} id="ytplayer" type="text/html" width="480" height="360"
                                                     src={`http://www.youtube.com/embed/${post.youtubeVideoUrl}?autoplay=0`}
                                                     frameBorder="0" />
-                                                : post.image ? <Image src={`http://127.0.0.1:3001/${post.image}`}></Image>
-                                                : null
+                                                : post.image !== 'uploads/mini/null' ? <Image src={`http://127.0.0.1:3001/${post.image}`}></Image>
+                                                : <div style={{width: '480px', height: '360px', backgroundColor: '#dedede', display: 'flex', flexFlow: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                                        <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center'}}>
+                                                            <i style={{fontSize: '2rem'}} className="fas fa-photo-video"></i>
+                                                            <p className="text-muted">No media attached</p>
+                                                        </div>
+                                                </div>
                                         }
                                         <Card.Body>
                                             <div className="userSection" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '25px', alignContent: 'center' }}>
@@ -195,7 +200,13 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                     <iframe title={post.title + post.index} id="ytplayer" type="text/html" width="480" height="360"
                                                         src={`http://www.youtube.com/embed/${post.youtubeVideoUrl}?autoplay=0`}
                                                         frameBorder="0" />
-                                                    : <Image src="https://via.placeholder.com/480x360"></Image>
+                                                    : post.image !== 'uploads/mini/null' ? <Image src={`http://127.0.0.1:3001/${post.image}`} />
+                                                    : <div style={{width: '480px', height: '360px', backgroundColor: '#dedede', display: 'flex', flexFlow: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                                    <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center'}}>
+                                                        <i style={{fontSize: '2rem'}} className="fas fa-photo-video"></i>
+                                                        <p className="text-muted">No media attached</p>
+                                                    </div>
+                                            </div>
                                             }
                                             <Card.Body>
                                                 <div className="userSection" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '25px', alignContent: 'center' }}>

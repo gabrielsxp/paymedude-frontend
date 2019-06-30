@@ -56,6 +56,7 @@ class CreatePost extends React.Component {
             data.append('postValue', this.state.paidContent ? this.state.postValue : 0);
             data.append('file', this.state.file);
             data.append('imageDescription', this.state.imageDescription);
+            console.log(data);
 
             this.setState({ submit: true, success: null, error: null });
             axios.post('/posts', data, { headers: {  'Content-Type': 'multipart/form-data' }})
@@ -71,7 +72,6 @@ class CreatePost extends React.Component {
                     imageDescription: '',
                     file: null,
                 });
-                console.log(response);
             })
             .catch((error) => {
                 this.setState({ submit: false, error: error });

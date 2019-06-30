@@ -3,13 +3,11 @@ import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import Spinner from 'react-bootstrap/Spinner';
 import Image from 'react-bootstrap/Image';
 import axios from '../axios';
 import styled from 'styled-components';
-import {connect} from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 
 const Styles = styled.div`
@@ -111,7 +109,7 @@ class Post extends React.Component {
                                             </Col>
                                         </Row>
                                     </Container>
-                                </Jumbotron> : this.state.post.fullImage ? 
+                                </Jumbotron> : this.state.post.fullImage !== 'uploads/resized/null' ? 
                                     <Container>
                                         <Row>
                                         <Col xs={12} style={{display: 'flex', flexFlow: 'column', justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}>
