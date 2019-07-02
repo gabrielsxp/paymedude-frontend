@@ -11,6 +11,7 @@ import Card from 'react-bootstrap/Card';
 import Alert from 'react-bootstrap/Alert';
 import ConfirmationModal from './ConfirmationModal';
 import EditPostModal from './EditPostModal'
+import BundleModal from './BundleModal';
 import { Link } from 'react-router-dom';
 import axios from '../axios';
 import styled from 'styled-components';
@@ -46,6 +47,11 @@ const Styles = styled.div`
         align-items: center;
         justify-content: center;
     }
+    @media(min-width: 576px){
+        .customSizeCardSm {
+            margin-bottom: 50px;
+        }
+    }
 `;
 
 class Dashboard extends React.Component {
@@ -65,6 +71,7 @@ class Dashboard extends React.Component {
         postId: '',
         showConfirmationModal: false,
         showEditPostModal: false,
+        showCreateBundleModal: false,
         loadingDelete: false,
         filteredTransactions: []
     }
@@ -112,8 +119,8 @@ class Dashboard extends React.Component {
             })
     }
     getPosts = (reload = false) => {
-        this.setState({loadingPosts: true});
-        axios.get(`/profile/${this.state.user.username}/posts?offset=${ !reload ? this.state.offset : 0}&category=${this.state.category.toLowerCase()}`)
+        this.setState({ loadingPosts: true });
+        axios.get(`/profile/${this.state.user.username}/posts?offset=${!reload ? this.state.offset : 0}&category=${this.state.category.toLowerCase()}`)
             .then((response) => {
                 console.log(response.data);
                 this.setState({ loadingPosts: false, posts: !reload ? this.state.posts.concat(response.data.posts) : response.data.posts, offset: this.state.offset + 6 });
@@ -136,21 +143,28 @@ class Dashboard extends React.Component {
             })
     }
     changeCategory = (category) => {
-        this.setState({category, offset: 0});
+        this.setState({ category, offset: 0 });
     }
+
     showConfirmationModalTrigger = (postId) => {
         console.log(postId);
         this.setState({ showConfirmationModal: true, postId });
     }
-    closeConfirmationModalTrigger = () => {
-        this.setState({ showConfirmationModal: false });
-    }
     showEditPostModalTrigger = (postId) => {
         this.setState({ showEditPostModal: true, postId });
+    }
+    showCreateBundleModalTrigger = () => {
+        this.setState({ showCreateBundleModal: true });
+    }
+    closeConfirmationModalTrigger = () => {
+        this.setState({ showConfirmationModal: false });
     }
     closeEditPostModalTrigger = () => {
         this.getPosts(true);
         this.setState({ showEditPostModal: false });
+    }
+    closeBundleModalTrigger = () => {
+        this.setState({ showCreateBundleModal: false });
     }
 
     render() {
@@ -204,8 +218,8 @@ class Dashboard extends React.Component {
                     : <Container><Row><Spinner style={{ margin: '10px auto' }} animation="border" role="status">
                         <span className="sr-only">Loading...</span>
                     </Spinner><Spinner style={{ margin: '10px auto' }} animation="border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </Spinner></Row></Container>
+                            <span className="sr-only">Loading...</span>
+                        </Spinner></Row></Container>
             }
             <Container>
                 <Row>
@@ -274,7 +288,7 @@ class Dashboard extends React.Component {
                 </Row>
                 <hr />
                 <Row>
-                    <Col xs={12} md={12} lg={12}>
+                    <Col xs={{span: 12, order: 2}} md={12} lg={8}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', alignContent: 'center' }}>
                             <h3>Posts</h3>
                             <Form inline>
@@ -286,7 +300,7 @@ class Dashboard extends React.Component {
                                 <Button onClick={this.getPosts} variant="outline-primary">Sort</Button>
                             </Form>
                         </div>
-                        <hr/>
+                        <hr />
                         {
                             this.state.loadingPosts ? <Container><Row><Spinner style={{ margin: '25px auto' }} animation="border" role="status">
                                 <span className="sr-only">Loading...</span>
@@ -294,18 +308,32 @@ class Dashboard extends React.Component {
                                 return <div key={index} style={{ borderRadius: '5px', marginTop: '25px', padding: '20px', border: '2px solid #dedede', display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
                                     {post.title}
                                     <div>
-                                        <i style={{cursor: 'pointer'}} onClick={() => this.showEditPostModalTrigger(post._id)} className="fas fa-pencil-alt text-primary"></i>
+                                        <i style={{ cursor: 'pointer' }} onClick={() => this.showEditPostModalTrigger(post._id)} className="fas fa-pencil-alt text-primary"></i>
                                         {
                                             post.category === 'public' ? <i onClick={() => this.showConfirmationModalTrigger(post._id)} style={{ marginLeft: '50px', cursor: 'pointer' }} className="fas fa-times text-danger"></i> : null
                                         }
                                     </div>
                                 </div>
-                            }) : <Alert variant="primary" style={{marginTop: '25px'}}>No posts to show</Alert>
+                            }) : <Alert variant="primary" style={{ marginTop: '25px' }}>No posts to show</Alert>
                         }
+                    </Col>
+                    <Col xs={{span: 12, order: 1}} md={12} lg={4}>
+                        <Styles>
+                            <Card style={{ width: '18rem' }} bsPrefix="card customSizeCardSm">
+                                <Card.Body>
+                                    <Card.Title>Make a Bundle <div className="fas fa-box-open"></div></Card.Title>
+                                    <Card.Text>
+                                        If you have premium products, create bundle of posts based on the level of your account.
+                                    </Card.Text>
+                                    <Button variant="primary" onClick={this.showCreateBundleModalTrigger}>Try out</Button>
+                                </Card.Body>
+                            </Card>
+                        </Styles>
                     </Col>
                 </Row>
                 <ConfirmationModal loading={this.state.loadingDelete} deletePost={this.deletePost} closeConfirmationModalTrigger={this.closeConfirmationModalTrigger} show={this.state.showConfirmationModal} id={this.state.postId} />
-                { this.state.showEditPostModal ? <EditPostModal postId={this.state.postId} showEditModal={this.state.showEditPostModal} closeEditPostModalTrigger={this.closeEditPostModalTrigger} ></EditPostModal> : null }
+                {this.state.showCreateBundleModal ? <BundleModal show={this.state.showCreateBundleModal} closeBundleModalTrigger={this.closeBundleModalTrigger}></BundleModal> : null}
+                {this.state.showEditPostModal ? <EditPostModal postId={this.state.postId} showEditModal={this.state.showEditPostModal} closeEditPostModalTrigger={this.closeEditPostModalTrigger} ></EditPostModal> : null}
             </Container>
         </div>
     }
