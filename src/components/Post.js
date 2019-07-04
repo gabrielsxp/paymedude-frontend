@@ -8,6 +8,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import Image from 'react-bootstrap/Image';
 import axios from '../axios';
 import styled from 'styled-components';
+import {connect} from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 
 const Styles = styled.div`
@@ -46,7 +47,10 @@ class Post extends React.Component {
         console.log(id);
         axios.patch(`/posts/${id}/like`)
             .then((response) => {
-                this.setState({ user: response.data.user, post: response.data.post });
+                if (response.data.post && response.data.user) {
+                    this.setState({ user: response.data.user, post: response.data.post });
+                    this.props.userChanged();
+                }
             })
             .catch((error) => {
                 this.setState({ error });
@@ -58,6 +62,7 @@ class Post extends React.Component {
             .then((response) => {
                 if (response.data.post && response.data.user) {
                     this.setState({ user: response.data.user, post: response.data.post });
+                    this.props.userChanged();
                 }
             })
             .catch((error) => {
@@ -144,4 +149,10 @@ class Post extends React.Component {
     }
 }
 
-export default withRouter(Post);
+const mapDispatchToProps = dispatch => {
+    return {
+        userChanged: () => dispatch({type: 'USER_CHANGED'})
+    }
+}
+
+export default connect(null, mapDispatchToProps)(withRouter(Post));

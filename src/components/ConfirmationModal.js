@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 
-const confirmationModal = ({show, closeConfirmationModalTrigger, deletePost, id, loading}) => {
+const confirmationModal = ({show, closeConfirmationModalTrigger, bundle, deleteBundle, deletePost, id, loading}) => {
     return <div>
       <Modal
         show={show}
@@ -20,7 +20,7 @@ const confirmationModal = ({show, closeConfirmationModalTrigger, deletePost, id,
         <Modal.Body>
           <p>Are you sure that you want to delete this post ?</p>
 
-          <Button disabled={loading} style={{marginRight: '25px'}} variant="danger" onClick={() => deletePost()}>
+          <Button disabled={loading} style={{marginRight: '25px'}} variant="danger" onClick={() => !bundle ? deletePost() : deleteBundle()}>
             {
                 !loading ? 'Confirm' : <Spinner animation="border" role="status">
                 <span className="sr-only">Loading...</span>

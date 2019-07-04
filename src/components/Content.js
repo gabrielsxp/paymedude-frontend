@@ -16,6 +16,10 @@ class Content extends React.Component {
     }
     componentDidMount(){
         this.props.profile ? this.getProfilePosts(true) : this.getPosts(true); 
+        axios.get('/me')
+            .then((response) => {
+                this.props.saveUser(response.data.user);
+            })
     }
     getProfilePosts = (init = false, resetOffset = false) => {
         axios.get(`${this.props.profilePath}/posts?offset=${!resetOffset ? this.state.offset : 0}&category=${this.state.category.toLowerCase()}`)
@@ -107,6 +111,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        saveUser : (user) => dispatch({type: 'SAVE_USER', user}),
         loadPosts: (posts) => dispatch({ type: 'POSTS_LOAD', posts }),
         initPosts: (posts) => dispatch({ type: 'POSTS_INIT', posts }),
         setPostId: (postId) => dispatch({type: 'SET_POST_ID', id: postId}),

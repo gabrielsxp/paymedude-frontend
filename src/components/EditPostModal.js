@@ -26,10 +26,12 @@ class EditPostModal extends React.Component {
     this.setState({ loading: true });
     axios.get(`/posts/${this.props.postId}`)
       .then((response) => {
+        console.log(response.data);
         this.setState({ post: response.data.post, title: response.data.post.title, content: response.data.post.content, imageDescription: response.data.post.imageDescription, youtubeVideoUrl: response.data.post.youtubeVideoUrl, loading: false });
       })
       .catch((error) => {
-        this.setState({ error, loading: false });
+        console.log(error);
+        this.setState({ error: 'Unable to load this post', loading: false });
       })
   }
   editPost = (e) => {
@@ -90,9 +92,9 @@ class EditPostModal extends React.Component {
               <Alert variant="success">
                 {this.state.success}
               </Alert> : this.state.error !== null ?
-                <Alert variant="danger">
+              <Alert variant="danger">
                   {this.state.error}
-                </Alert> : null
+              </Alert> : null
           }
           {
             this.state.post ?

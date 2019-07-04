@@ -14,6 +14,7 @@ class BundleModal extends React.Component {
         posts: [],
         price: 0,
         name: '',
+        active: 'Active',
         submiting: false,
         success: null,
         error: null,
@@ -23,7 +24,7 @@ class BundleModal extends React.Component {
         exists: false
     }
     componentDidMount() {
-        axios.get('/posts/premium')
+        axios.get('/posts/filter/premium')
             .then((response) => {
                 console.log(response.data);
                 this.setState({ loading: false, posts: this.state.posts.concat(response.data.posts), post: 0 })
@@ -38,10 +39,11 @@ class BundleModal extends React.Component {
             name: this.state.name,
             price: this.state.price,
             items: this.state.items,
+            active: this.state.active === 'Active' ? true : false,
             discount: 0
         }
         this.setState({ submiting: true });
-        axios.post('/bundle', body)
+        axios.post('/bundles', body)
             .then((response) => {
                 if (response.data.bundle) {
                     this.setState({ submiting: false, success: 'Bundle created successfully !' });
@@ -131,6 +133,13 @@ class BundleModal extends React.Component {
                                     <Form.Group>
                                         <Form.Label>Select the price of the bundle</Form.Label>
                                         <Form.Control value={this.state.price} onChange={e => this.setState({ price: e.target.value })} type="text"></Form.Control>
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.Label>This Bundle is ready to be sold ?</Form.Label>
+                                        <Form.Control value={this.state.post} onChange={e => this.setState({ active: e.target.value })} as="select">
+                                            <option>Active</option>
+                                            <option>Inactive</option>
+                                        </Form.Control>
                                     </Form.Group>
                                     {
                                         this.state.items.length > 0 ?

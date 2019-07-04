@@ -86,11 +86,11 @@ const Styles = styled.i`
     }
 `;
 
-const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePost, unlikePost, profileLink, changeCategory, category, paymentDialogLoad, handlePaymentDialogShow  }) => {
+const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePost, unlikePost, profileLink, changeCategory, category, paymentDialogLoad, handlePaymentDialogShow }) => {
     const classNameLikedPost = `fas fa-heart red`;
     const classNameNotLikedPost = `fas fa-heart black`;
     return <Container style={{ marginTop: '50px', paddingBottom: '80px' }}>
-        { paymentDialogLoad ? <Payment /> : null }
+        {paymentDialogLoad ? <Payment /> : null}
         <h3 style={{ textAlign: 'center' }}>Posts</h3>
         <hr />
         <div className="control" style={{ border: '1px solid #dedede', borderRadius: '5px', padding: '20px', display: 'flex', justifyContent: 'space-between', flexFlow: 'row', flexWrap: 'wrap' }}>
@@ -121,12 +121,12 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                     src={`http://www.youtube.com/embed/${post.youtubeVideoUrl}?autoplay=0`}
                                                     frameBorder="0" />
                                                 : post.image !== 'uploads/mini/null' ? <Image src={`http://127.0.0.1:3001/${post.image}`}></Image>
-                                                : <div style={{width: '480px', height: '360px', backgroundColor: '#dedede', display: 'flex', flexFlow: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                                        <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center'}}>
-                                                            <i style={{fontSize: '2rem'}} className="fas fa-photo-video"></i>
+                                                    : <div style={{ width: '480px', height: '360px', backgroundColor: '#dedede', display: 'flex', flexFlow: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                                        <div style={{ display: 'flex', flexFlow: 'column', alignItems: 'center' }}>
+                                                            <i style={{ fontSize: '2rem' }} className="fas fa-photo-video"></i>
                                                             <p className="text-muted">No media attached</p>
                                                         </div>
-                                                </div>
+                                                    </div>
                                         }
                                         <Card.Body>
                                             <div className="userSection" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '25px', alignContent: 'center' }}>
@@ -139,15 +139,13 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                 <div><i className="far fa-clock"></i>&nbsp;{post.createdAt}</div>
                                             </div>
                                             <Card.Title>{post.title}</Card.Title>
-                                            <Card.Text>
-                                                <br />
-                                                {
-                                                    post.content.split('\n')[0]
-                                                }
-                                                <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '25px'}}>
-                                                    <Link to={`/posts/${post._id}`}><Button variant="outline-primary">Read More</Button></Link>
-                                                </div>
-                                            </Card.Text>
+                                            <br />
+                                            {
+                                                <Card.Text>post.content.split('\n')[0]</Card.Text>
+                                            }
+                                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '25px' }}>
+                                                <Link to={`/posts/${post._id}`}><Button variant="outline-primary">Read More</Button></Link>
+                                            </div>
                                         </Card.Body>
                                         <Card.Footer>
                                             <Styles>
@@ -201,12 +199,12 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                         src={`http://www.youtube.com/embed/${post.youtubeVideoUrl}?autoplay=0`}
                                                         frameBorder="0" />
                                                     : post.image !== 'uploads/mini/null' ? <Image src={`http://127.0.0.1:3001/${post.image}`} />
-                                                    : <div style={{width: '480px', height: '360px', backgroundColor: '#dedede', display: 'flex', flexFlow: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                                    <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center'}}>
-                                                        <i style={{fontSize: '2rem'}} className="fas fa-photo-video"></i>
-                                                        <p className="text-muted">No media attached</p>
-                                                    </div>
-                                            </div>
+                                                        : <div style={{ width: '480px', height: '360px', backgroundColor: '#dedede', display: 'flex', flexFlow: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                                            <div style={{ display: 'flex', flexFlow: 'column', alignItems: 'center' }}>
+                                                                <i style={{ fontSize: '2rem' }} className="fas fa-photo-video"></i>
+                                                                <p className="text-muted">No media attached</p>
+                                                            </div>
+                                                        </div>
                                             }
                                             <Card.Body>
                                                 <div className="userSection" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '25px', alignContent: 'center' }}>
@@ -223,7 +221,7 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                     {
                                                         post.content.split('\n'[0])
                                                     }
-                                                    <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '25px'}}>
+                                                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '25px' }}>
                                                         <Link to={`/posts/${post._id}`}><Button variant="outline-primary">Read More</Button></Link>
                                                     </div>
                                                 </Card.Text>
@@ -237,7 +235,7 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                                     <i
                                                                         onClick={() => user.likedPosts.includes(post._id) ? unlikePost(post._id, index) : likePost(post._id, index)}
                                                                         style={{ cursor: user ? 'pointer' : 'auto' }}
-                                                                        className={`${ user.likedPosts.includes(post._id) ? classNameLikedPost : classNameNotLikedPost}`}>
+                                                                        className={`${user.likedPosts.includes(post._id) ? classNameLikedPost : classNameNotLikedPost}`}>
                                                                     </i> : <i
                                                                         onClick={() => likePost(post._id, index)}
                                                                         style={{ cursor: user ? 'pointer' : 'auto' }}
@@ -258,12 +256,12 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                             }
                         </Col>
                     }) : <Container>
-                        <Row>
-                        <Spinner style={{margin: '50px auto'}} animation="border" role="status">
-                            <span className="sr-only">Loading...</span>
-                        </Spinner>
-                        </Row>
-                    </Container>
+                            <Row>
+                                <Spinner style={{ margin: '50px auto' }} animation="border" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </Spinner>
+                            </Row>
+                        </Container>
             }
         </Row>
         {

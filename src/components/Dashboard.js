@@ -59,16 +59,21 @@ class Dashboard extends React.Component {
         loading: false,
         loadingPosts: false,
         loadingFiltered: false,
+        loadingBundles: false,
         error: null,
         limit: false,
         offset: 0,
         category: "Public",
+        bundleCategory: "Active",
         totalSells: 0,
         user: null,
         balance: 0,
         transactions: [],
         posts: [],
+        bundles: [],
         postId: '',
+        bundleId: '',
+        isBundleDelete: false,
         showConfirmationModal: false,
         showEditPostModal: false,
         showCreateBundleModal: false,
@@ -82,6 +87,7 @@ class Dashboard extends React.Component {
                 this.getBuyerTransactions();
                 this.getFilteredTransactions();
                 this.getPosts();
+                this.getBundles();
             })
     }
     getBuyerTransactions = () => {
@@ -106,6 +112,28 @@ class Dashboard extends React.Component {
             .catch((error) => {
                 this.setState({ loading: false });
                 console.log(error);
+            })
+    }
+    getBundles = () => {
+        this.setState({ loadingBundles: true });
+        axios.get(`/bundles?category=${this.state.bundleCategory.toLowerCase()}`)
+            .then((response) => {
+                console.log(response.data);
+                this.setState({ loadingBundles: false, bundles: response.data.bundles });
+            })
+            .catch((error) => {
+                this.setState({ loadloadingBundlesing: false, error });
+            })
+    }
+    deleteBundle = () => {
+        this.setState({ loadingDelete: true });
+        axios.delete(`/bundles/${this.state.bundleId}`)
+            .then(() => {
+                this.setState({ loadingDelete: false, showConfirmationModal: false });
+                this.getBundles();
+            })
+            .catch((error) => {
+                this.setState({ error });
             })
     }
     getSellerTransactions = () => {
@@ -145,16 +173,19 @@ class Dashboard extends React.Component {
     changeCategory = (category) => {
         this.setState({ category, offset: 0 });
     }
-
-    showConfirmationModalTrigger = (postId) => {
-        console.log(postId);
-        this.setState({ showConfirmationModal: true, postId });
+    changeBundleCategory = (category) => {
+        this.setState({ bundleCategory: category });
+    }
+    showConfirmationModalTrigger = (id, type) => {
+        console.log(id, type);
+        this.setState({ showConfirmationModal: true, postId: type === 'post' ? id : '', bundleId: type === 'bundle' ? id : '', isBundleDelete: type === 'bundle' ? true : false });
     }
     showEditPostModalTrigger = (postId) => {
         this.setState({ showEditPostModal: true, postId });
     }
     showCreateBundleModalTrigger = () => {
         this.setState({ showCreateBundleModal: true });
+        this.getBundles();
     }
     closeConfirmationModalTrigger = () => {
         this.setState({ showConfirmationModal: false });
@@ -230,7 +261,7 @@ class Dashboard extends React.Component {
                             !this.state.transactions ? <Container><Row><Spinner style={{ margin: '10px auto' }} animation="border" role="status">
                                 <span className="sr-only">Loading...</span>
                             </Spinner></Row></Container> : this.state.transactions.length > 0 ? this.state.transactions.map((transaction, index) => {
-                                return <Accordion key={index} defaultActiveKey="0">
+                                return <Accordion key={index} defaultActiveKey="-1">
                                     <Card>
                                         <Accordion.Toggle as={Card.Header} eventKey={`${index}`}>
                                             {transaction.productNames[0]}
@@ -253,12 +284,12 @@ class Dashboard extends React.Component {
                                 </Accordion>
                             }) : <Alert variant="primary">
                                         You do not have any transactions stored
-                            </Alert>
+                                </Alert>
                         }
                         {
-                            !this.state.limit ? <Button style={{ marginTop: '50px' }} variant="secondary" block onClick={this.getBuyerTransactions}>
+                            this.state.user ? <Button disabled={this.state.limit || this.state.loading} style={{ marginTop: '0px', borderRadius: '0 0 5px 5px', backgroundColor: `${this.state.user.bannerColor}`, color: `${this.state.user.fontColor}` }} variant="secondary" block onClick={this.getBuyerTransactions}>
                                 {
-                                    !this.state.loading ? 'Load More' : <Spinner style={{ margin: '10px auto' }} animation="border" role="status">
+                                    !this.state.loading && !this.state.limit ? 'Load More' : !this.state.loading && this.state.limit  ? 'All transactions were loaded' : <Spinner animation="border" role="status">
                                         <span className="sr-only">Loading...</span>
                                     </Spinner>
                                 }
@@ -287,13 +318,19 @@ class Dashboard extends React.Component {
                     </Col>
                 </Row>
                 <hr />
+                {
+                    this.state.user ? <Jumbotron style={{ backgroundColor: `${this.state.user.bannerColor}` }}>
+                        <h3 style={{ color: `${this.state.user.fontColor}` }}>Make a bundle <i className="fas fa-box-open"></i></h3>
+                        <Button onClick={this.showCreateBundleModalTrigger} style={{ color: `${this.state.user.fontColor}`, backgroundColor: `${this.state.user.bannerColor}`, border: `2px solid ${this.state.user.borderColor}` }}>Try out</Button>
+                    </Jumbotron> : null
+                }
                 <Row>
-                    <Col xs={{span: 12, order: 2}} md={12} lg={8}>
+                    <Col xs={{ span: 12, order: 1 }} md={12} lg={6} style={{ marginBottom: '50px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', alignContent: 'center' }}>
                             <h3>Posts</h3>
                             <Form inline>
                                 <Form.Label>Sort By</Form.Label>&nbsp;&nbsp;
-                                <Form.Control as="select" className="mr-sm-2" value={this.state.category} onChange={e => this.changeCategory(e.target.value)}>
+                                    <Form.Control as="select" className="mr-sm-2" value={this.state.category} onChange={e => this.changeCategory(e.target.value)}>
                                     <option>Public</option>
                                     <option>Premium</option>
                                 </Form.Control>
@@ -310,28 +347,42 @@ class Dashboard extends React.Component {
                                     <div>
                                         <i style={{ cursor: 'pointer' }} onClick={() => this.showEditPostModalTrigger(post._id)} className="fas fa-pencil-alt text-primary"></i>
                                         {
-                                            post.category === 'public' ? <i onClick={() => this.showConfirmationModalTrigger(post._id)} style={{ marginLeft: '50px', cursor: 'pointer' }} className="fas fa-times text-danger"></i> : null
+                                            post.category === 'public' ? <i onClick={() => this.showConfirmationModalTrigger(post._id, 'post')} style={{ marginLeft: '50px', cursor: 'pointer' }} className="fas fa-times text-danger"></i> : null
                                         }
                                     </div>
                                 </div>
                             }) : <Alert variant="primary" style={{ marginTop: '25px' }}>No posts to show</Alert>
                         }
                     </Col>
-                    <Col xs={{span: 12, order: 1}} md={12} lg={4}>
-                        <Styles>
-                            <Card style={{ width: '18rem' }} bsPrefix="card customSizeCardSm">
-                                <Card.Body>
-                                    <Card.Title>Make a Bundle <div className="fas fa-box-open"></div></Card.Title>
-                                    <Card.Text>
-                                        If you have premium products, create bundle of posts based on the level of your account.
-                                    </Card.Text>
-                                    <Button variant="primary" onClick={this.showCreateBundleModalTrigger}>Try out</Button>
-                                </Card.Body>
-                            </Card>
-                        </Styles>
+                    <Col xs={{ span: 12, order: 1 }} md={12} lg={6} style={{ marginBottom: '50px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', alignContent: 'center' }}>
+                            <h3>Bundles</h3>
+                            <Form inline>
+                                <Form.Label>Sort By</Form.Label>&nbsp;&nbsp;
+                                    <Form.Control as="select" className="mr-sm-2" value={this.state.bundleCategory} onChange={e => this.changeBundleCategory(e.target.value)}>
+                                    <option>Active</option>
+                                    <option>Inactive</option>
+                                </Form.Control>
+                                <Button onClick={this.getBundles} variant="outline-primary">Sort</Button>
+                            </Form>
+                        </div>
+                        <hr />
+                        {
+                            this.state.loadingBundles ? <Container><Row><Spinner style={{ margin: '25px auto' }} animation="border" role="status">
+                                <span className="sr-only">Loading...</span>
+                            </Spinner></Row></Container> : this.state.bundles.length > 0 ? this.state.bundles.map((bundle, index) => {
+                                return <div key={index} style={{ borderRadius: '5px', marginTop: '25px', padding: '20px', border: '2px solid #dedede', display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
+                                    {bundle.name}
+                                    <div>
+                                        <i style={{ cursor: 'pointer' }} className="fas fa-pencil-alt text-primary"></i>
+                                        <i onClick={() => this.showConfirmationModalTrigger(bundle._id, 'bundle')} style={{ marginLeft: '50px', cursor: 'pointer' }} className="fas fa-times text-danger"></i>
+                                    </div>
+                                </div>
+                            }) : <Alert variant="primary" style={{ marginTop: '25px' }}>No bundles to show</Alert>
+                        }
                     </Col>
                 </Row>
-                <ConfirmationModal loading={this.state.loadingDelete} deletePost={this.deletePost} closeConfirmationModalTrigger={this.closeConfirmationModalTrigger} show={this.state.showConfirmationModal} id={this.state.postId} />
+                {this.state.showConfirmationModal ? <ConfirmationModal bundle={this.state.isBundleDelete} deleteBundle={this.deleteBundle} loading={this.state.loadingDelete} deletePost={this.deletePost} closeConfirmationModalTrigger={this.closeConfirmationModalTrigger} show={this.state.showConfirmationModal} id={this.state.postId} /> : null}
                 {this.state.showCreateBundleModal ? <BundleModal show={this.state.showCreateBundleModal} closeBundleModalTrigger={this.closeBundleModalTrigger}></BundleModal> : null}
                 {this.state.showEditPostModal ? <EditPostModal postId={this.state.postId} showEditModal={this.state.showEditPostModal} closeEditPostModalTrigger={this.closeEditPostModalTrigger} ></EditPostModal> : null}
             </Container>
