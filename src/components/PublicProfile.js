@@ -1,8 +1,8 @@
 import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Spinner from 'react-bootstrap/Spinner';
 import Alert from 'react-bootstrap/Alert';
+import Spinner from 'react-bootstrap/Spinner';
 import axios from '../axios';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -36,7 +36,8 @@ class PublicProfile extends React.Component {
                 </Spinner></Row></Container>
             }
             { 
-                this.props.user && this.props.posts ? <Content profilePath={this.props.location.pathname} profile={true} /> : <Container><Row><Spinner style={{ margin: '50px auto' }} animation="border" role="status">
+                this.props.user && this.props.posts ? <Content profilePath={this.props.location.pathname} profile={true} /> : 
+                !this.props.auth ? <Alert variant="primary">Sign in to see all the posts</Alert> : <Container><Row><Spinner style={{ margin: '50px auto' }} animation="border" role="status">
                     <span className="sr-only">Loading...</span>
                 </Spinner></Row></Container>
 

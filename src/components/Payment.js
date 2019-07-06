@@ -40,7 +40,7 @@ class Payment extends React.Component {
                     customer: this.props.user._id,
                     customerUsername: this.props.user.username,
                     customerEmail: this.props.user.email,
-                    seller: this.props.seller.sellerId,
+                    sellerId: this.props.seller.sellerId,
                     sellerUsername: this.props.seller.sellerUsername,
                     sellerEmail: this.props.seller.sellerEmail,
                     amount: parseFloat(this.props.checkoutValue),

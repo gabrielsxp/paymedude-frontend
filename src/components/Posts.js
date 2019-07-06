@@ -141,7 +141,7 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                             <Card.Title>{post.title}</Card.Title>
                                             <br />
                                             {
-                                                <Card.Text>post.content.split('\n')[0]</Card.Text>
+                                                <Card.Text>{post.content.split('\n')[0]}</Card.Text>
                                             }
                                             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '25px' }}>
                                                 <Link to={`/posts/${post._id}`}><Button variant="outline-primary">Read More</Button></Link>
@@ -219,7 +219,7 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                 <Card.Title>{post.title}</Card.Title>
                                                 <Card.Text>
                                                     {
-                                                        post.content.split('\n'[0])
+                                                        post.content.split('\n')[0]
                                                     }
                                                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '25px' }}>
                                                         <Link to={`/posts/${post._id}`}><Button variant="outline-primary">Read More</Button></Link>

@@ -65,6 +65,13 @@ class Profile extends React.Component {
     verifyPassword = () => {
         return this.state.password.length >= 6 ? this.setState({validPassword: true}) : this.setState({validPassword: false});
     }
+    defautColors = () => {
+        this.setState({
+            bannerColor: '#dedede',
+            fontColor: '#333',
+            borderColor: '#333'
+        });
+    }
     editProfile = () => {
         this.setState({ submit: true, success: null });
         const dataPassword = {
@@ -139,7 +146,7 @@ class Profile extends React.Component {
                 allColors.push(c);
             }
         }
-        return allColors.slice(0,18);
+        return allColors.slice(0,15);
     }
     setBannerColors = () => {
         const c = this.randomizeColors();
@@ -213,7 +220,7 @@ class Profile extends React.Component {
                     <Modal.Body>
                         <Container>
                             <Row>
-                                <Col xs={12} md={6}>
+                                <Col xs={12}>
                                     <h5>Personal Information</h5>
                                     <hr/>
                                     <Form>
@@ -246,36 +253,51 @@ class Profile extends React.Component {
                                         </InputGroup>
                                 </Form>
                                 </Col>
-                                <Col xs={12} md={6}>
-                                    <h5>Layout Information</h5>
+                            </Row>
+                            <hr/>
+                            <Row>
+                                <Col xs={12}>
+                                    <div style={{display: 'flex', alignItems: 'center', alignContent: 'center', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+                                        <h5>Layout Information</h5>
+                                        <Button variant="secondary" onClick={this.defautColors}>
+                                            Default Colors
+                                        </Button>
+                                    </div>
                                     <hr/>
-                                    <p><b>Profile Banner Color</b><Button onClick={this.setBannerColors} variant="secondary" style={{marginLeft: '15px'}}><i className="fas fa-dice-five"></i></Button></p>
+                                    <div>
+                                    <p><b>Profile Banner Color</b>
+                                    <Button onClick={this.setBannerColors} variant="secondary" style={{marginLeft: '15px'}}>Randomize <i className="fas fa-dice-five"></i></Button></p>
+                                    </div>
                                     <br/>
-                                    <div style={{width: '238px', boxSizing: 'border-box', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>Current Color: <div style={{display: 'inline-block', width: '28px', height: '28px', borderRadius: '50%', backgroundColor: `${this.state.bannerColor}`}}></div></div>
+                                    <div style={{width: '100%', boxSizing: 'border-box', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>Current Color: <div style={{display: 'inline-block', width: '28px', height: '28px', borderRadius: '50%', backgroundColor: `${this.state.bannerColor}`}}></div></div>
                                     <hr/>
-                                    <CirclePicker 
+                                    <CirclePicker
+                                        width="100%"
                                         colors={this.state.randomColorsBanner} 
                                         onChange={this.handleChangeBannerColor}
                                     />
                                     <hr/>
-                                    <p><b>Profile Banner Borders Color</b><Button onClick={this.setBorderColors} variant="secondary" style={{marginLeft: '15px'}}><i className="fas fa-dice-five"></i></Button></p>
-                                    <div style={{width: '238px', boxSizing: 'border-box', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>Current Color: <div style={{display: 'inline-block', width: '28px', height: '28px', borderRadius: '50%', backgroundColor: `${this.state.borderColor}`}}></div></div>
+                                    <p><b>Profile Banner Borders Color</b><Button onClick={this.setBorderColors} variant="secondary" style={{marginLeft: '15px'}}>Randomize <i className="fas fa-dice-five"></i></Button></p>
+                                    <div style={{width: '100%', boxSizing: 'border-box', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>Current Color: <div style={{display: 'inline-block', width: '28px', height: '28px', borderRadius: '50%', backgroundColor: `${this.state.borderColor}`}}></div></div>
                                     <hr/>
                                     <CirclePicker 
+                                        width="100%"
                                         colors={this.state.randomColorsBorder} 
                                         onChange={this.handleChangeBorderColor} 
                                     />
                                     <hr/>
-                                    <p><b>Profile Banner Font Color</b><Button onClick={this.setFontColors} variant="secondary" style={{marginLeft: '15px'}}><i className="fas fa-dice-five"></i></Button></p>
-                                    <div style={{width: '238px', boxSizing: 'border-box', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>Current Color: <div style={{display: 'inline-block', width: '28px', height: '28px', borderRadius: '50%', backgroundColor: `${this.state.fontColor}`}}></div></div>
+                                    <p><b>Profile Banner Font Color</b><Button onClick={this.setFontColors} variant="secondary" style={{marginLeft: '15px'}}>Randomize <i className="fas fa-dice-five"></i></Button></p>
+                                    <div style={{width: '100%', boxSizing: 'border-box', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>Current Color: <div style={{display: 'inline-block', width: '28px', height: '28px', borderRadius: '50%', backgroundColor: `${this.state.fontColor}`}}></div></div>
                                     <hr/>
                                     <CirclePicker 
+                                        width="100%"
                                         colors={this.state.randomColorsFont} 
                                         onChange={this.handleChangeFontColor} 
                                     />
                                 </Col>
                             </Row>
-                            <Button variant="primary" type="submit" onClick={this.editProfile} disabled={this.state.submit}>
+                            <hr/>
+                            <Button style={{marginTop: '15px'}} variant="primary" type="submit" onClick={this.editProfile} disabled={this.state.submit}>
                             {
                                 !this.state.submit ? 'Update Profile' :
                                 <div>

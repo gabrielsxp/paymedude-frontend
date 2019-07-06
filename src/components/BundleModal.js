@@ -67,7 +67,7 @@ class BundleModal extends React.Component {
         this.setState({ items: posts });
     }
     verifyValue = () => {
-        return this.state.price.match('^[0-9]+(\.[0-9]{1,2})?$');
+        return this.state.price.match('^[0-9]+(.[0-9]{1,2})?$');
     }
     render() {
         return <div>
