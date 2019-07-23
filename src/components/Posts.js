@@ -89,7 +89,7 @@ const Styles = styled.i`
 const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePost, unlikePost, profileLink, changeCategory, category, paymentDialogLoad, handlePaymentDialogShow }) => {
     const classNameLikedPost = `fas fa-heart red`;
     const classNameNotLikedPost = `fas fa-heart black`;
-    return <Container style={{ marginTop: '50px', paddingBottom: '80px' }}>
+    return <Container style={{ paddingTop: '80px', paddingBottom: '80px', minHeight: '100vh' }}>
         {paymentDialogLoad ? <Payment /> : null}
         <h3 style={{ textAlign: 'center' }}>Posts</h3>
         <hr />
@@ -136,7 +136,7 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                         profileLink ? <Link style={{ color: "#333", fontWeight: "bold" }} to={`/profile/${post.username}`}>{post.username}</Link> : post.username
                                                     }
                                                 </div>
-                                                <div><i className="far fa-clock"></i>&nbsp;{post.createdAt}</div>
+                                                <div><i className="far fa-clock"></i>&nbsp;{post.relative}</div>
                                             </div>
                                             <Card.Title>{post.title}</Card.Title>
                                             <br />
@@ -164,7 +164,7 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                     }
                                                     &nbsp;{post.likes}
                                                     &nbsp;&nbsp;
-                                                    <i className="fas fa-comment-dots"></i> 0
+                                                    <i className="fas fa-comment-dots"></i> {post.comments}
                                                 </div>
                                             </Styles>
                                         </Card.Footer>
@@ -187,7 +187,7 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                             profileLink ? <Link style={{ color: "#333", fontWeight: "bold" }} to={`/profile/${post.username}`}>{post.username}</Link> : post.username
                                                         }
                                                     </div>
-                                                    <div><i className="far fa-clock"></i>&nbsp;{post.createdAt}</div>
+                                                    <div><i className="far fa-clock"></i>&nbsp;{post.relative}</div>
                                                 </div>
                                                 <div className="premiumPostTitle"><b>{post.title}</b></div>
                                             </div>
@@ -214,7 +214,7 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                             profileLink ? <Link style={{ color: "#333", fontWeight: "bold" }} to={`/profile/${post.username}`}>{post.username}</Link> : post.username
                                                         }
                                                     </div>
-                                                    <div><i className="far fa-clock"></i>&nbsp;{post.createdAt}</div>
+                                                    <div><i className="far fa-clock"></i>&nbsp;{post.relative}</div>
                                                 </div>
                                                 <Card.Title>{post.title}</Card.Title>
                                                 <Card.Text>
@@ -244,7 +244,7 @@ const posts = ({ profile, posts, limit, user, getPosts, getProfilePosts, likePos
                                                             }
                                                             &nbsp;{post.likes}
                                                             &nbsp;&nbsp;
-                                                            <i className="fas fa-comment-dots"></i> 0
+                                                            <i className="fas fa-comment-dots"></i> {post.comments}
                                                         </div>
                                                         <div>
                                                             <i className="fas fa-unlock"></i>

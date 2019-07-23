@@ -35,6 +35,7 @@ class Content extends React.Component {
     getPosts = (init = false, resetOffset = false) => {
         axios.get(`/posts?offset=${!resetOffset ? this.state.offset : 0}&category=${this.state.category.toLowerCase()}`)
             .then((response) => {
+                console.log(response.data.posts);
                 init ? this.props.initPosts(response.data.posts) : this.props.loadPosts(response.data.posts);
                 this.setState({ loading: false, limit: response.data.limit, offset: this.state.offset + 6 });
             })

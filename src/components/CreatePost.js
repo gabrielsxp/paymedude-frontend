@@ -9,11 +9,12 @@ import Spinner from 'react-bootstrap/Spinner';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import axios from '../axios';
+import { withRouter } from 'react-router-dom';
 
 class CreatePost extends React.Component {
     state = {
         title: '',
-        user: {username: ''},
+        user: { username: '' },
         youtubeVideo: false,
         youtubeVideoUrl: '',
         postImage: false,
@@ -31,11 +32,13 @@ class CreatePost extends React.Component {
     componentDidMount() {
         axios.get('/me')
             .then((response) => {
-                console.log(response.data);
-                this.setState({user: response.data.user});
+                if(!response.data.user.creator){
+                    this.props.history.push('/plans');
+                }
+                this.setState({ user: response.data.user });
             })
             .catch((error) => {
-                this.setState({error});
+                this.setState({ error });
             })
     }
     checkUrl = () => {
@@ -43,7 +46,7 @@ class CreatePost extends React.Component {
     }
     createPost = (e) => {
         e.preventDefault();
-        if(this.state.postImage && this.state.file){
+        if (this.state.postImage && this.state.file) {
             let data = new FormData();
             data.append('title', this.state.title);
             data.append('author', this.state.user._id);
@@ -59,24 +62,24 @@ class CreatePost extends React.Component {
             console.log(data);
 
             this.setState({ submit: true, success: null, error: null });
-            axios.post('/posts', data, { headers: {  'Content-Type': 'multipart/form-data' }})
-            .then((response) => {
-                this.setState({ 
-                    submit: false, 
-                    success: true, 
-                    title: '', 
-                    content: '', 
-                    youtubeVideoUrl: '',
-                    youtubeVideo: false,
-                    postImage: false,
-                    imageDescription: '',
-                    file: null,
-                });
-            })
-            .catch((error) => {
-                this.setState({ submit: false, error: error });
-                console.log(error);
-            })
+            axios.post('/posts', data, { headers: { 'Content-Type': 'multipart/form-data' } })
+                .then((response) => {
+                    this.setState({
+                        submit: false,
+                        success: true,
+                        title: '',
+                        content: '',
+                        youtubeVideoUrl: '',
+                        youtubeVideo: false,
+                        postImage: false,
+                        imageDescription: '',
+                        file: null,
+                    });
+                })
+                .catch((error) => {
+                    this.setState({ submit: false, error: error });
+                    console.log(error);
+                })
         } else {
             const postData = {
                 title: this.state.title,
@@ -93,11 +96,11 @@ class CreatePost extends React.Component {
             this.setState({ submit: true, success: null, error: null });
             axios.post('/posts', postData)
                 .then((response) => {
-                    this.setState({ 
-                        submit: false, 
-                        success: true, 
-                        title: '', 
-                        content: '', 
+                    this.setState({
+                        submit: false,
+                        success: true,
+                        title: '',
+                        content: '',
                         youtubeVideoUrl: '',
                         youtubeVideo: false,
                         postImage: false,
@@ -113,11 +116,11 @@ class CreatePost extends React.Component {
         }
     }
     verifyValue = () => {
-        const limitCheck = this.state.user.accountLevel === 1 ? this.state.postValue <= 1 : this.state.user.accountLevel === 2  ? this.state.postValue <= 5 : this.state.user.accountLevel === 3 ? this.state.postValue <= 10 : false;
+        const limitCheck = this.state.user.accountLevel === 1 ? this.state.postValue <= 1 : this.state.user.accountLevel === 2 ? this.state.postValue <= 5 : this.state.user.accountLevel === 3 ? this.state.postValue <= 10 : false;
         this.setState({ validValue: this.state.postValue.match('^[0-9]+(\.[0-9]{1,2})?$') && limitCheck });
     }
     render() {
-        const canSubmit = (this.state.youtubeVideo ? (this.state.validUrl && this.state.title.length > 0 && this.state.content.length > 0) : this.state.postImage ? (this.state.title.length > 0 && this.state.content.length > 0 && this.state.file && this.state.imageDescription) :  this.state.title.length > 0 && this.state.content.length > 0);
+        const canSubmit = (this.state.youtubeVideo ? (this.state.validUrl && this.state.title.length > 0 && this.state.content.length > 0) : this.state.postImage ? (this.state.title.length > 0 && this.state.content.length > 0 && this.state.file && this.state.imageDescription) : this.state.title.length > 0 && this.state.content.length > 0);
         return <div style={{ padding: '50px 0' }}>
             <Container>
                 <Row>
@@ -129,41 +132,41 @@ class CreatePost extends React.Component {
                             <Form.Control value={this.state.title} onChange={e => this.setState({ title: e.target.value, success: null, error: null })} type="text" placeholder="Type the title of the article" />
                         </Form.Group>
                         <Form.Group>
-                        <Form.Label>Post Author</Form.Label>
-                        {
-                            this.state.user ? <Form.Control value={`${this.state.user.username}`} type="text" placeholder="Small text" disabled /> : <Spinner animation="border" role="status">
-                            <span className="sr-only">Loading...</span>
-                            </Spinner> 
-                        }
+                            <Form.Label>Post Author</Form.Label>
+                            {
+                                this.state.user ? <Form.Control value={`${this.state.user.username}`} type="text" placeholder="Small text" disabled /> : <Spinner animation="border" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </Spinner>
+                            }
                         </Form.Group>
                         {
                             this.state.user.accountLevel >= 1 ? <div>
-                                    <Form.Check
-                                        checked={this.state.youtubeVideo}
-                                        type='checkbox'
-                                        label='Embed a Youtube Video'
-                                        id='premium-option-1'
-                                        style={{ margin: '20px 0' }}
-                                        onChange={e => this.setState({ youtubeVideo: e.target.checked, postImage: false })}
-                                    />
-                                    <Form.Check
-                                        checked={this.state.postImage}
-                                        type='checkbox'
-                                        label='Post Image'
-                                        id='premium-option-2'
-                                        style={{ margin: '20px 0' }}
-                                        onChange={e => this.setState({ postImage: e.target.checked, youtubeVideo: false })}
-                                    />
-                                    <Form.Check
-                                        checked={this.state.user.paidContent}
-                                        type='checkbox'
-                                        label='Check to monetize this content'
-                                        id='premium-option-3'
-                                        style={{ margin: '20px 0' }}
-                                        onChange={e => this.setState({ paidContent: e.target.checked })}
-                                    />
-                                </div>
-                            : null
+                                <Form.Check
+                                    checked={this.state.youtubeVideo}
+                                    type='checkbox'
+                                    label='Embed a Youtube Video'
+                                    id='premium-option-1'
+                                    style={{ margin: '20px 0' }}
+                                    onChange={e => this.setState({ youtubeVideo: e.target.checked, postImage: false })}
+                                />
+                                <Form.Check
+                                    checked={this.state.postImage}
+                                    type='checkbox'
+                                    label='Post Image'
+                                    id='premium-option-2'
+                                    style={{ margin: '20px 0' }}
+                                    onChange={e => this.setState({ postImage: e.target.checked, youtubeVideo: false })}
+                                />
+                                <Form.Check
+                                    checked={this.state.user.paidContent}
+                                    type='checkbox'
+                                    label='Check to monetize this content'
+                                    id='premium-option-3'
+                                    style={{ margin: '20px 0' }}
+                                    onChange={e => this.setState({ paidContent: e.target.checked })}
+                                />
+                            </div>
+                                : null
                         }
                         {
                             this.state.youtubeVideo ? <InputGroup style={{ margin: '20px 0' }} className="mb-3">
@@ -172,46 +175,46 @@ class CreatePost extends React.Component {
                                         https://www.youtube.com/watch?v=
                                 </InputGroup.Text>
                                 </InputGroup.Prepend>
-                                <FormControl value={this.state.youtubeVideoUrl} onChange={e => this.setState({ youtubeVideoUrl: e.target.value, success: null, error: null  })} isInvalid={!this.state.validUrl} isValid={this.state.validUrl} onBlur={this.checkUrl} id="basic-url" aria-describedby="basic-addon3" />
+                                <FormControl value={this.state.youtubeVideoUrl} onChange={e => this.setState({ youtubeVideoUrl: e.target.value, success: null, error: null })} isInvalid={!this.state.validUrl} isValid={this.state.validUrl} onBlur={this.checkUrl} id="basic-url" aria-describedby="basic-addon3" />
                             </InputGroup> : null
                         }
                         {
-                            this.state.postImage ? 
+                            this.state.postImage ?
                                 <div>
                                     <InputGroup className="mb-3">
-                                        <FormControl onChange={e => this.setState({file: e.target.files[0]})} type="file"/>
+                                        <FormControl onChange={e => this.setState({ file: e.target.files[0] })} type="file" />
                                     </InputGroup>
                                     <p className="text-muted"><b className="text-danger"> Warning: </b>This image will be resize to 1280x1024 and 480x360</p>
                                     <Form.Group controlId="exampleForm.ControlTextarea1">
                                         <Form.Label>Full post image description</Form.Label>
-                                        <Form.Control onChange={e => this.setState({imageDescription: e.target.value})} as="textarea" rows="3" />
+                                        <Form.Control onChange={e => this.setState({ imageDescription: e.target.value })} as="textarea" rows="3" />
                                     </Form.Group>
                                 </div> : null
                         }
                         {
                             this.state.paidContent ? <div><Form.Text className="text-muted">
-                                Max value for this post is $ {this.state.user.accountLevel ? '1' : this.state.user.accountLevel ? '5' : '10' }
+                                Max value for this post is $ {this.state.user.accountLevel ? '1' : this.state.user.accountLevel ? '5' : '10'}
                             </Form.Text>
-                            <InputGroup className="mb-3">
-                            <InputGroup.Prepend>
-                              <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <FormControl
-                              value={this.state.postValue}
-                              onBlur={this.verifyValue}
-                              placeholder="Post value"
-                              aria-label="Post value"
-                              aria-describedby="basic-addon1"
-                              isValid={this.state.validValue}
-                              isInvalid={!this.state.validValue}
-                              onChange={e => this.setState({postValue: e.target.value})}
-                            />
-                            
-                          </InputGroup></div> : null
+                                <InputGroup className="mb-3">
+                                    <InputGroup.Prepend>
+                                        <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <FormControl
+                                        value={this.state.postValue}
+                                        onBlur={this.verifyValue}
+                                        placeholder="Post value"
+                                        aria-label="Post value"
+                                        aria-describedby="basic-addon1"
+                                        isValid={this.state.validValue}
+                                        isInvalid={!this.state.validValue}
+                                        onChange={e => this.setState({ postValue: e.target.value })}
+                                    />
+
+                                </InputGroup></div> : null
                         }
                         <Form.Group controlId="Form.ControlTextarea">
                             <Form.Label>Post Content</Form.Label>
-                            <Form.Control value={this.state.content} onChange={e => this.setState({ content: e.target.value, success: null, error: null  })} as="textarea" rows="6" />
+                            <Form.Control value={this.state.content} onChange={e => this.setState({ content: e.target.value, success: null, error: null })} as="textarea" rows="6" />
                         </Form.Group>
                         <Button size="lg" block variant={this.state.success ? 'success' : this.state.error ? 'danger' : 'primary'} type="submit" onClick={this.createPost} disabled={this.state.submit || this.state.error || !canSubmit}>
                             {
@@ -230,9 +233,9 @@ class CreatePost extends React.Component {
                             }
                         </Button>
                         {
-                            this.state.error ? <Alert variant="danger" style={{marginTop: '20px'}}>
+                            this.state.error ? <Alert variant="danger" style={{ marginTop: '20px' }}>
                                 <Alert.Heading><i className="fas fa-exclamation-circle"></i> Oops... Something Went Wrong !</Alert.Heading>
-                                <hr/>
+                                <hr />
                                 <p><b>Error Message:</b> {this.state.error}</p>
                             </Alert> : null
                         }
@@ -243,4 +246,4 @@ class CreatePost extends React.Component {
     }
 }
 
-export default CreatePost;
+export default withRouter(CreatePost);

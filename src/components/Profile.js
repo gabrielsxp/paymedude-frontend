@@ -117,6 +117,7 @@ class Profile extends React.Component {
 
             axios.patch(`${this.props.location.pathname}`, this.state.changePassword ? dataPassword : data, { headers: {  'Content-Type': 'multipart/form-data' }})
             .then((response) => {
+                console.log(this.props.location.pathname);
                 this.setState({ submit: false, success: 'Profile Updated !' })
                 this.props.userChanged();
                 this.getProfile();

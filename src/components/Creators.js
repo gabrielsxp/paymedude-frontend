@@ -99,7 +99,7 @@ class Creators extends React.Component {
     render() {
         return <div style={{ paddingTop: '80px', paddingBottom: '80px', minHeight: '100vh' }}>
             <Container>
-                <h2 style={{ textAlign: 'center' }}>Top Creators</h2>
+                <h3 style={{ textAlign: 'center' }}>Top Creators</h3>
                 <hr />
                 <div className="control" style={{ border: '1px solid #dedede', borderRadius: '5px', padding: '20px', display: 'flex', justifyContent: 'space-between', flexFlow: 'row', flexWrap: 'wrap' }}>
                     <Form inline>

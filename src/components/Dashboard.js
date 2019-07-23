@@ -216,7 +216,7 @@ class Dashboard extends React.Component {
     }
 
     render() {
-        return <div style={{ marginTop: '0px', paddingBottom: '80px' }}>
+        return this.state.user && this.state.user.creator ? <div style={{ marginTop: '0px', paddingBottom: '80px' }}>
             {
                 this.state.user ?
                     <Jumbotron style={{ backgroundColor: `${this.state.user.bannerColor}`, padding: '80px' }} fluid>
@@ -459,7 +459,59 @@ class Dashboard extends React.Component {
                 {this.state.showCreateBundleModal ? <BundleModal show={this.state.showCreateBundleModal} closeBundleModalTrigger={this.closeBundleModalTrigger}></BundleModal> : null}
                 {this.state.showEditPostModal ? <EditPostModal postId={this.state.postId} showEditModal={this.state.showEditPostModal} closeEditPostModalTrigger={this.closeEditPostModalTrigger} ></EditPostModal> : null}
             </Container>
-        </div>
+        </div> : this.state.user && !this.state.user.creator ? <div style={{ padding: '80px 0 80px 0' }}>
+            <Container>
+                <Row>
+                    <Col xs={12}>
+                        <h3>Receipts</h3>
+                        <hr />
+                        {
+                            !this.state.transactions ? <Container><Row><Spinner style={{ margin: '10px auto' }} animation="border" role="status">
+                                <span className="sr-only">Loading...</span>
+                            </Spinner></Row></Container> : this.state.transactions.length > 0 ? this.state.transactions.map((transaction, index) => {
+                                return <Accordion key={index} defaultActiveKey="-1">
+                                    <Card>
+                                        <Accordion.Toggle as={Card.Header} eventKey={`${index}`}>
+                                            {transaction.productNames[0]}
+                                        </Accordion.Toggle>
+                                        <Accordion.Collapse eventKey={`${index}`}>
+                                            <Card.Body>
+                                                <div key={index} style={{ border: '1px solid #dedede', borderRadius: '5px', padding: '20px', marginBottom: '20px' }}>
+                                                    <div className="transactionsSummary">
+                                                        <p><b>Product id: </b>{transaction.productBuyed}</p>
+                                                        <p><b>Products: </b>{transaction.productNames}</p>
+                                                        <p><b>Customer: </b>{transaction.customerUsername}</p>
+                                                        <p><b>Customer Email: </b>{transaction.customerEmail}</p>
+                                                        <p><b>Customer Profile: </b><Link to={`/profile/${transaction.customerUsername}`}>Visit profile</Link></p>
+                                                        <p><b>Value: </b>${transaction.amount}</p>
+                                                    </div>
+                                                </div>
+                                            </Card.Body>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Accordion>
+                            }) : <Alert variant="primary">
+                                        You do not have any transactions stored
+                                </Alert>
+                        }
+                        {
+                            this.state.user ? <Button disabled={this.state.limit || this.state.loading} style={{ marginTop: '0px', borderRadius: '0 0 5px 5px', backgroundColor: `${this.state.user.bannerColor}`, color: `${this.state.user.fontColor}` }} variant="secondary" block onClick={this.getBuyerTransactions}>
+                                {
+                                    !this.state.loading && !this.state.limit ? 'Load More' : !this.state.loading && this.state.limit ? 'All transactions were loaded' : <Spinner animation="border" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </Spinner>
+                                }
+                            </Button> : null
+                        }
+                    </Col>
+
+                </Row>
+            </Container>
+        </div> : <Container><Row><Spinner style={{ margin: '10px auto' }} animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+        </Spinner><Spinner style={{ margin: '10px auto' }} animation="border" role="status">
+                <span className="sr-only">Loading...</span>
+            </Spinner></Row></Container>
     }
 }
 
