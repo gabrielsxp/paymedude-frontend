@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from "./services/auth";
 const baseURL = process.env.REACT_APP_API_URL || 'http://127.0.0.1';
-const port = process.env.REACT_APP_PORT || '3001';
+const port = process.env.REACT_APP_API_URL_PORT || '3001';
 const instance = axios.create({
     baseURL: `${baseURL}:${port}`
 });
